@@ -1,79 +1,41 @@
-import React, { useState } from 'react';
+import { observer } from 'mobx-react';
+import React from 'react';
 import { addStyles, EditableMathField } from 'react-mathquill';
-const nerdamer = require('nerdamer/all');
+import './expression_store';
+import ExpStore from './expression_store';
 
 addStyles()
 
+const store = new ExpStore();
+
 export default function Calculator() {
-
-  const initLatex = '1+x';
-  const [latexExp, setResult] = useState(initLatex);
-
   return (
     <div>
       <EditableMathField
-        latex={initLatex}
+        latex={store.expression}
         onChange={
-          (mathField) => setResult(mathField.latex())
+          (mathField) => store.update(mathField.latex())
         }
       />
-      <p></p>
-      <button hidden={true}>Solve</button>
-      <p>{'Latex: ' + latexExp}</p>
-      <p>{'Result: ' + calc(latexExp)}</p>
-      <p>{'Solve: ' + solve(latexExp)}</p>
-      <p>{'Integer: ' + integrate(latexExp)}</p>
-      <p>{'Defint: ' + defint(latexExp)}</p>
-      <p>{'Diff: ' + diff(latexExp)}</p>
+      <ResultBox exp={store} />
     </div>
   );
 }
 
-function calc(expression: string): string {
-  try {
-    let e = nerdamer.convertFromLaTeX(expression);
-    return e.evaluate().text();
-  } catch (error) {
-    return error;
-  }
+interface ResultBoxProps {
+  exp: ExpStore
 }
 
-function solve(expression: string): string {
-  try {
-    let e = nerdamer.convertFromLaTeX(expression);
-    if (e.variables().length == 1) {
-      return e.solveFor('x').toString();
-    } else {
-      return '';
-    }
-  } catch (error) {
-    return error;
-  }
-}
-
-function integrate(expression: string): string {
-  try {
-    let e = nerdamer.convertFromLaTeX(expression);
-    return nerdamer.integrate(e.text());
-  } catch (error) {
-    return error;
-  }
-}
-
-function defint(expression: string): string {
-  try {
-    let e = nerdamer.convertFromLaTeX(expression);
-    return nerdamer.defint(e.text(), 0, 1);
-  } catch (error) {
-    return error;
-  }
-}
-
-function diff(expression: string): string {
-  try {
-    let e = nerdamer.convertFromLaTeX(expression);
-    return nerdamer.diff(e.text());
-  } catch (error) {
-    return error;
-  }
-}
+// @observer
+const ResultBox: React.FC<ResultBoxProps> = observer(props =>
+  (
+    <ul>
+      <li>{'Latex: ' + props.exp.expression}</li>
+      <li>{'Result: ' + props.exp.result}</li>
+      {/* <li>{'Solve: ' + solve(exp.expression)}</li>
+      <li>{'Integer: ' + integrate(exp.expression)}</li>
+      <li>{'Defint: ' + defint(exp.expression)}</li>
+      <li>{'Diff: ' + diff(exp.expression)}</li> */}
+    </ul>
+  )
+)
