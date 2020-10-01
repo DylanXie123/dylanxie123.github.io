@@ -1,41 +1,48 @@
 import { observer } from 'mobx-react';
 import React from 'react';
 import { addStyles, EditableMathField } from 'react-mathquill';
-import './expression_store';
-import ExpStore from './expression_store';
+import './expression';
+import Expression, { ExpContext, expStore } from './expression';
+import Plot from './plot';
 
 addStyles()
 
-const store = new ExpStore();
-
 export default function Calculator() {
   return (
-    <div>
-      <EditableMathField
-        latex={store.expression}
-        onChange={
-          (mathField) => store.update(mathField.latex())
-        }
-      />
-      <ResultBox exp={store} />
-    </div>
+    <ExpContext.Provider value={expStore}>
+      <MathField />
+      <ResultBox />
+      {/* <Plot /> */}
+    </ExpContext.Provider>
   );
 }
 
-interface ResultBoxProps {
-  exp: ExpStore
+function MathField() {
+  return (
+    <ExpContext.Consumer>
+      {exp => (
+        <EditableMathField
+          latex={''}
+          onChange={mf => exp.update(mf.latex())}
+        />
+      )}
+    </ExpContext.Consumer>
+  );
 }
 
-// @observer
-const ResultBox: React.FC<ResultBoxProps> = observer(props =>
-  (
+function ResultBox() {
+  return (
+    <ExpContext.Consumer >{
+      exp => <ResultBoxView exp={exp} />
+    }</ExpContext.Consumer>
+  );
+}
+
+const ResultBoxView = observer((
+  { exp }: { exp: Expression }) => (
     <ul>
-      <li>{'Latex: ' + props.exp.expression}</li>
-      <li>{'Result: ' + props.exp.result}</li>
-      {/* <li>{'Solve: ' + solve(exp.expression)}</li>
-      <li>{'Integer: ' + integrate(exp.expression)}</li>
-      <li>{'Defint: ' + defint(exp.expression)}</li>
-      <li>{'Diff: ' + diff(exp.expression)}</li> */}
+      <li>{'Latex: ' + exp.latex}</li>
+      <li>{'Result: ' + exp.result}</li>
+      <li>{'Var: ' + exp.variables.concat()}</li>
     </ul>
-  )
-)
+  ));
