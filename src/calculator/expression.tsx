@@ -11,6 +11,11 @@ export default class Expression {
   update = (latex: string) => {
     // Mathquill library's some latex output can't be recognized by nerdamer
     this.latex = latex.replace('\\cdot', '*');
+    // nerdamer.convertFromLaTeX cause error when input string is empty
+    if (latex.length < 1) {
+      this.expression = nerdamer('');
+      return;
+    }
     try {
       this.expression = nerdamer.convertFromLaTeX(this.latex);
     } catch (error) { }
@@ -24,9 +29,17 @@ export default class Expression {
     }
   }
 
-  @computed get result(): string {
+  @computed get eval(): string {
     try {
       return this.expression.evaluate().text();
+    } catch (error) {
+      return error;
+    }
+  }
+
+  @computed get text(): string {
+    try {
+      return nerdamer(this.expression.toString()).toTeX();
     } catch (error) {
       return error;
     }
