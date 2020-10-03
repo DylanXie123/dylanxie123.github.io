@@ -1,11 +1,10 @@
 import { observer } from 'mobx-react';
 import React from 'react';
-import { addStyles, EditableMathField, StaticMathField } from 'react-mathquill';
 import './expression';
 import Expression, { ExpContext, expStore } from './expression';
 import Plot from './plot';
-
-addStyles()
+import { MathfieldComponent } from "react-mathlive";
+import { combineConfig } from 'react-mathlive/dist/MathfieldComponent';
 
 export default function Calculator() {
   return (
@@ -17,19 +16,18 @@ export default function Calculator() {
   );
 }
 
-const mathStyle: React.CSSProperties = {
-  width: "100%",
-  height: "50px",
-};
-
 function MathField() {
+  const config = combineConfig(
+    { initialLatex: '' }
+  )
+  config.virtualKeyboardMode = 'auto';
   return (
     <ExpContext.Consumer>
       {exp => (
-        <EditableMathField
-          latex={''}
-          onChange={mf => exp.update(mf.latex())}
-          style = {mathStyle}
+        <MathfieldComponent
+          latex={'1+2'}
+          onChange={mf => exp.update(mf)}
+          mathfieldConfig={config}
         />
       )}
     </ExpContext.Consumer>
@@ -44,6 +42,11 @@ function ResultBox() {
   );
 }
 
+const config = combineConfig(
+  { initialLatex: '' }
+)
+config.readOnly = true;
+
 const ResultBoxView = observer((
   { exp }: { exp: Expression }) => (
     <ul>
@@ -51,7 +54,10 @@ const ResultBoxView = observer((
       <li>{'Result: ' + exp.eval}</li>
       <li>
         <span>Text:</span>
-        <StaticMathField >{exp.text}</StaticMathField>
+        <MathfieldComponent
+          latex={exp.text}
+          mathfieldConfig={config}
+        />
       </li>
       <li>{'Var: ' + exp.variables.concat()}</li>
     </ul>
