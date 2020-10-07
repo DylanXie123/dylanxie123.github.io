@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react';
-import React from 'react';
+import React, { useContext } from 'react';
 import './expression';
 import Expression, { ExpContext, expStore } from './expression';
 import Plot from './plot';
@@ -17,28 +17,31 @@ export default function Calculator() {
 }
 
 function MathField() {
+  const exp = useContext(ExpContext);
+  
   const config = combineConfig(
     { initialLatex: '' }
   )
-  config.virtualKeyboardMode = 'auto';
+  config.virtualKeyboardMode =  'manual';
+  config.macros = {
+    'asin': '\\arcsin',
+    'acos': '\\arccos',
+    'atan': '\\arctan',
+  };
+  config.onContentDidChange = (mf) => exp.update(mf.$text("latex-expanded"));
+
   return (
-    <ExpContext.Consumer>
-      {exp => (
-        <MathfieldComponent
-          latex={'1+2'}
-          onChange={mf => exp.update(mf)}
-          mathfieldConfig={config}
-        />
-      )}
-    </ExpContext.Consumer>
+    <MathfieldComponent
+      latex={'0'}
+      mathfieldConfig={config}
+    />
   );
 }
 
 function ResultBox() {
+  const exp = useContext(ExpContext);
   return (
-    <ExpContext.Consumer >{
-      exp => <ResultBoxView exp={exp} />
-    }</ExpContext.Consumer>
+    <ResultBoxView exp={exp} />
   );
 }
 

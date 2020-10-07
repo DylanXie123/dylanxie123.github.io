@@ -10,7 +10,15 @@ export default class Expression {
   @action
   update = (latex: string) => {
     // Mathquill library's some latex output can't be recognized by nerdamer
-    this.latex = latex.replace('\\cdot', '*');
+    this.latex = latex.replaceAll('\\cdot', '*');
+    this.latex = this.latex.replaceAll('\\times', '*');
+    this.latex = this.latex.replaceAll('\\sqrt[]', '\\sqrt');
+    this.latex = this.latex.replaceAll('\\ln', '\\log');
+    this.latex = this.latex.replaceAll('\\lg', '\\log10');
+    this.latex = this.latex.replaceAll('\\degree', '*pi/180');
+    this.latex = this.latex.replaceAll('\\arcsin', '\\asin');
+    this.latex = this.latex.replaceAll('\\arccos', '\\acos');
+    this.latex = this.latex.replaceAll('\\arctan', '\\atan');
     // nerdamer.convertFromLaTeX cause error when input string is empty
     if (latex.length < 1) {
       this.expression = nerdamer('');
