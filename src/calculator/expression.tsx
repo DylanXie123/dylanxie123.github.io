@@ -5,25 +5,25 @@ const nerdamer = require('nerdamer/all');
 export default class Expression {
   @observable latex: string = '';
 
-  @observable expression = nerdamer('');
+  private expression = nerdamer('');
 
   @action
-  update = (latex: string) => {
-    // Mathquill library's some latex output can't be recognized by nerdamer
-    this.latex = latex.replaceAll('\\cdot', '*');
-    this.latex = this.latex.replaceAll('\\times', '*');
-    this.latex = this.latex.replaceAll('\\sqrt[]', '\\sqrt');
-    this.latex = this.latex.replaceAll('\\ln', '\\log');
-    this.latex = this.latex.replaceAll('\\lg', '\\log10');
-    this.latex = this.latex.replaceAll('\\degree', '*pi/180');
-    this.latex = this.latex.replaceAll('\\arcsin', '\\asin');
-    this.latex = this.latex.replaceAll('\\arccos', '\\acos');
-    this.latex = this.latex.replaceAll('\\arctan', '\\atan');
+  update = (input: string) => {
     // nerdamer.convertFromLaTeX cause error when input string is empty
-    if (latex.length < 1) {
+    if (input.length < 1) {
       this.expression = nerdamer('');
       return;
     }
+    // Mathquill library's some latex output can't be recognized by nerdamer
+    this.latex = input.replace(new RegExp('\\cdot', 'g'), '*');
+    this.latex = this.latex.replace(new RegExp('\\times', 'g'), '*');
+    this.latex = this.latex.replace(new RegExp('\\sqrt[]', 'g'), '\\sqrt');
+    this.latex = this.latex.replace(new RegExp('\\ln', 'g'), '\\log');
+    this.latex = this.latex.replace(new RegExp('\\lg', 'g'), '\\log10');
+    this.latex = this.latex.replace(new RegExp('\\degree', 'g'), '*pi/180');
+    this.latex = this.latex.replace(new RegExp('\\arcsin', 'g'), '\\asin');
+    this.latex = this.latex.replace(new RegExp('\\arccos', 'g'), '\\acos');
+    this.latex = this.latex.replace(new RegExp('\\arctan', 'g'), '\\atan');
     try {
       this.expression = nerdamer.convertFromLaTeX(this.latex);
     } catch (error) { }

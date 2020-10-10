@@ -28,7 +28,7 @@ function MathField() {
     'acos': '\\arccos',
     'atan': '\\arctan',
   };
-  config.onContentDidChange = (mf) => exp.update(mf.$text("latex-expanded"));
+  config.onContentDidChange = (mf) => exp.update(mf.getValue("latex-expanded"));
 
   return (
     <MathfieldComponent

@@ -20,7 +20,7 @@ const PlotView = observer(({ fn }: {fn: Expression}) => {
     yAxis: { domain: [-1.2, 1.2] },
     grid: true,
     data: [{
-      fn: fn?.expression?.evaluate()?.text(),
+      fn: fn?.text,
     }]
   };
 
