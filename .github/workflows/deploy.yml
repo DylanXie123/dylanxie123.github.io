@@ -28,7 +28,9 @@ jobs:
     - name: Test
       run: npm run test
     - name: Deploy
-      uses: peaceiris/actions-gh-pages@v3.7.0-4
+      uses: JamesIves/github-pages-deploy-action@3.6.2
       with: 
-        deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-        publish_dir: ./build
+        GITHUB_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+        BRANCH: gh-pages # The branch the action should deploy to.
+        FOLDER: build # The folder the action should deploy.
+        CLEAN: true # Automatically remove deleted files from the deploy branch
