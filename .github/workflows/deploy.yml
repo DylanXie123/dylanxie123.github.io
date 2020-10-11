@@ -22,7 +22,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: Clean
-      run: npm clean
+      run: npm clean-install
     - name: Install Packages
       run: npm install
     - name: Test
