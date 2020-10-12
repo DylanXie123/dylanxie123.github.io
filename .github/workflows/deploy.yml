@@ -1,4 +1,4 @@
-name: Deployment
+name: Test&Deployment
 on:
   push:
     branches:
@@ -15,8 +15,10 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: Install Packages
+    - name: Install packages
       run: npm install
+    - name: Test
+      run: npm test
     - name: Build page
       run: npm run build
     - name: Deploy to gh-pages
