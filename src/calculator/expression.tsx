@@ -18,7 +18,7 @@ export default class Expression {
     this.latex = input.replace(RegExp('\\cdot', 'g'), '*');
     this.latex = this.latex.replace(RegExp('\\times', 'g'), '*');
     this.latex = this.latex.replace(RegExp('\\sqrt[]', 'g'), '\\sqrt');
-    this.latex = this.latex.replace(RegExp('\\ln', 'g'), '\log');
+    this.latex = this.latex.replace(RegExp('\\ln', 'g'), '\\log');
     this.latex = this.latex.replace(RegExp('\\lg', 'g'), '\\log10');
     this.latex = this.latex.replace(RegExp('\\\\degree', 'g'), '*pi/180');
     this.latex = this.latex.replace(RegExp('\\arcsin', 'g'), '\\asin');
