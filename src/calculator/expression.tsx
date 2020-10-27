@@ -1,45 +1,36 @@
 import { action, computed, observable } from "mobx";
 import React from "react";
-const nerdamer = require('nerdamer/all');
+const algebraLatex = require('algebra-latex');
+const algebrite = require('algebrite');
+
+const parser = new algebraLatex();
 
 export default class Expression {
   @observable latex: string = '';
 
-  @observable private expression = nerdamer('');
+  @observable private expression: any;
 
   @action
   update = (input: string) => {
-    // nerdamer.convertFromLaTeX cause error when input string is empty
-    if (input.length < 1) {
-      this.expression = nerdamer('');
-      return;
-    }
-    // Mathquill library's some latex output can't be recognized by nerdamer
-    this.latex = input.replace(RegExp('\\cdot', 'g'), '*');
-    this.latex = this.latex.replace(RegExp('\\times', 'g'), '*');
-    this.latex = this.latex.replace(RegExp('\\sqrt[]', 'g'), '\\sqrt');
-    this.latex = this.latex.replace(RegExp('\\ln', 'g'), '\\log');
-    this.latex = this.latex.replace(RegExp('\\lg', 'g'), '\\log10');
-    this.latex = this.latex.replace(RegExp('\\\\degree', 'g'), '*pi/180');
-    this.latex = this.latex.replace(RegExp('\\arcsin', 'g'), '\\asin');
-    this.latex = this.latex.replace(RegExp('\\arccos', 'g'), '\\acos');
-    this.latex = this.latex.replace(RegExp('\\arctan', 'g'), '\\atan');
     try {
-      this.expression = nerdamer.convertFromLaTeX(this.latex);
-    } catch (error) { }
+      parser.parseLatex(input);
+      this.expression = parser.toAlgebra(algebrite);
+    } catch (error) {
+      this.expression = null;
+    }
   }
 
-  @computed get variables(): number[] {
-    try {
-      return this.expression.variables();
-    } catch (error) {
-      return [];
-    }
-  }
+  // @computed get variables(): number[] {
+  //   try {
+  //     return [];
+  //   } catch (error) {
+  //     return [];
+  //   }
+  // }
 
   @computed get eval(): string {
     try {
-      return this.expression.evaluate().text();
+      return algebrite.float(this.expression).d;
     } catch (error) {
       return error;
     }
@@ -47,47 +38,47 @@ export default class Expression {
 
   @computed get text(): string {
     try {
-      return nerdamer(this.expression.toString()).toTeX();
+      return this.expression.toString();
     } catch (error) {
       return error;
     }
   }
 
-  @computed get solve(): string {
-    try {
-      if (this.expression.variables().length === 1) {
-        return this.expression.solveFor('x').toString();
-      } else {
-        return '';
-      }
-    } catch (error) {
-      return error;
-    }
-  }
+  // @computed get solve(): string {
+  //   try {
+  //     if (this.expression.variables().length === 1) {
+  //       return this.expression.solveFor('x').toString();
+  //     } else {
+  //       return '';
+  //     }
+  //   } catch (error) {
+  //     return error;
+  //   }
+  // }
 
-  @computed get integrate(): string {
-    try {
-      return nerdamer.integrate(this.expression.text());
-    } catch (error) {
-      return error;
-    }
-  }
+  // @computed get integrate(): string {
+  //   try {
+  //     return nerdamer.integrate(this.expression.text());
+  //   } catch (error) {
+  //     return error;
+  //   }
+  // }
 
-  @computed get defint(): string {
-    try {
-      return nerdamer.defint(this.expression.text(), 0, 1);
-    } catch (error) {
-      return error;
-    }
-  }
+  // @computed get defint(): string {
+  //   try {
+  //     return nerdamer.defint(this.expression.text(), 0, 1);
+  //   } catch (error) {
+  //     return error;
+  //   }
+  // }
 
-  @computed get diff(): string {
-    try {
-      return nerdamer.diff(this.expression.text());
-    } catch (error) {
-      return error;
-    }
-  }
+  // @computed get diff(): string {
+  //   try {
+  //     return nerdamer.diff(this.expression.text());
+  //   } catch (error) {
+  //     return error;
+  //   }
+  // }
 
 }
 

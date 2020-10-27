@@ -62,6 +62,6 @@ const ResultBoxView = observer((
           mathfieldConfig={config}
         />
       </li>
-      <li>{'Var: ' + exp.variables.concat()}</li>
+      {/* <li>{'Var: ' + exp.variables.concat()}</li> */}
     </ul>
   ));
