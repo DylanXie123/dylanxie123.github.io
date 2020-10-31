@@ -11,7 +11,7 @@ export default function Calculator() {
     <ExpContext.Provider value={expStore}>
       <MathField />
       <ResultBox />
-      <Plot />
+      {/* <Plot /> */}
     </ExpContext.Provider>
   );
 }
@@ -22,17 +22,12 @@ function MathField() {
   const config = combineConfig(
     { initialLatex: '' }
   )
-  config.virtualKeyboardMode =  'manual';
-  config.macros = {
-    'asin': '\\arcsin',
-    'acos': '\\arccos',
-    'atan': '\\arctan',
-  };
+  config.virtualKeyboardMode =  'onfocus';
   config.onContentDidChange = (mf) => exp.update(mf.getValue("latex-expanded"));
 
   return (
     <MathfieldComponent
-      latex={'0'}
+      latex={''}
       mathfieldConfig={config}
     />
   );
@@ -62,6 +57,5 @@ const ResultBoxView = observer((
           mathfieldConfig={config}
         />
       </li>
-      {/* <li>{'Var: ' + exp.variables.concat()}</li> */}
     </ul>
   ));

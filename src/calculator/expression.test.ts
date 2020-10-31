@@ -20,17 +20,17 @@ describe('function test', () => {
     expect(Number(expStore.eval)).toBeCloseTo(Math.tan(2));
   })
 
-  test('asin', () => {
+  test('arcsin', () => {
     expStore.update('\\arcsin(0.2)');
     expect(Number(expStore.eval)).toBeCloseTo(Math.asin(0.2));
   })
 
-  test('acos', () => {
+  test('arccos', () => {
     expStore.update('\\arccos(0.2)');
     expect(Number(expStore.eval)).toBeCloseTo(Math.acos(0.2));
   })
 
-  test('atan', () => {
+  test('arctan', () => {
     expStore.update('\\arctan(0.2)');
     expect(Number(expStore.eval)).toBeCloseTo(Math.atan(0.2));
   })
@@ -38,16 +38,22 @@ describe('function test', () => {
   test('ln', () => {
     expStore.update('\\log(e+10)');
     expect(Number(expStore.eval)).toBeCloseTo(Math.log(Math.E + 10));
+
+    expStore.update('\\ln(e+10)');
+    expect(Number(expStore.eval)).toBeCloseTo(Math.log(Math.E + 10));
   })
 
-  // test('lg', () => {
-  //   expStore.update('\\log10(e+10)');
-  //   expect(Number(expStore.eval)).toBeCloseTo(Math.log10(Math.E + 10));
-  // })
+  test('lg', () => {
+    // expStore.update('\\lg(e+10)');
+    // expect(Number(expStore.eval)).toBeCloseTo(Math.log10(Math.E + 10));
+  })
 
   test('sqrt', () => {
-    expStore.update('\\sqrt{5}');
+    expStore.update('\\sqrt[2]{5}');
     expect(Number(expStore.eval)).toBeCloseTo(Math.sqrt(5));
+
+    // expStore.update('\\sqrt[]{5}');
+    // expect(Number(expStore.eval)).toBeCloseTo(Math.sqrt(5));
   })
 
 })
@@ -69,8 +75,8 @@ describe('operation test', () => {
     expect(Number(expStore.eval)).toBeCloseTo(2);
     // expStore.update('1\\times 2');
     // expect(Number(expStore.eval)).toBeCloseTo(2);
-    // expStore.update('1\\cdot 2');
-    // expect(Number(expStore.eval)).toBeCloseTo(2);
+    expStore.update('1\\cdot 2');
+    expect(Number(expStore.eval)).toBeCloseTo(2);
   })
 
   test('divide', () => {
@@ -89,27 +95,15 @@ describe('operation test', () => {
 
 })
 
-describe('general test', () => {
-  test('eq1', () => {
-    // expStore.update('\\cos(\\frac{pi}{4})');
-    // console.log(expStore.text)
-    // expect(Number(expStore.eval)).toBeCloseTo(0.7071);
-    // expStore.update('\\ln(0.5)');
-    // expect(Number(expStore.eval)).toBeCloseTo(Math.log(0.5));
-    // expStore.update('\\ln(\\frac{1}{2}+1-1)');
-    // expect(Number(expStore.eval)).toBeCloseTo(Math.log(0.5));
-    // expStore.update('\\ln(\\cos(pi/3))');
-    // expect(Number(expStore.eval)).toBeCloseTo(Math.log(0.5));
-    // expStore.update('\\ln(0.7071)');
-    // console.log(expStore.text)
-    // expect(Number(expStore.eval)).toBeCloseTo(-0.3466);
-    // expStore.update('\\ln(1/\\sqrt{2})');
-    // console.log(expStore.text)
-    // expect(Number(expStore.eval)).toBeCloseTo(-0.3466);
-    // expStore.update('\\log(\\cos(\\frac{pi}{4}))');
-    // console.log(expStore.text)
-    // expect(Number(expStore.eval)).toBeCloseTo(-0.3466);
-    // expStore.update('e^{2+\\sin(23)}-\\ln(\\cos(45\\degree))*pi+.1');
-    // expect(Number(expStore.eval)).toBeCloseTo(4.3589);
-  })
+test('general test', () => {
+
+  expStore.update('e^{2+\\sin(23)}-\\log(\\cos(pi/4))*pi+0.1');
+  expect(Number(expStore.eval)).toBeCloseTo(4.3589);
+
+  expStore.update('e^{e-2*\\sin(23/\\ln(5))}');
+  expect(Number(expStore.eval)).toBeCloseTo(2.0997);
+
+  expStore.update('\\sin(e^{pi/3+1}+\\cos(4/4))');
+  expect(Number(expStore.eval)).toBeCloseTo(0.9079);
+
 })

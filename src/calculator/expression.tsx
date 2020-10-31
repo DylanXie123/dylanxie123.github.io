@@ -12,6 +12,7 @@ export default class Expression {
 
   @action
   update = (input: string) => {
+    this.latex = input;
     try {
       parser.parseLatex(input);
       this.expression = parser.toAlgebra(algebrite);
@@ -38,7 +39,7 @@ export default class Expression {
 
   @computed get text(): string {
     try {
-      return this.expression.toString();
+      return algebrite.run("printlatex(" + this.expression.toString() + ")");
     } catch (error) {
       return error;
     }
