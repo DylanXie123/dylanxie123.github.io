@@ -18,11 +18,10 @@ export default function Calculator() {
 
 function MathField() {
   const exp = useContext(ExpContext);
-  
+
   const config = combineConfig(
     { initialLatex: '' }
   )
-  config.virtualKeyboardMode =  'onfocus';
   config.onContentDidChange = (mf) => exp.update(mf.getValue("latex-expanded"));
 
   return (
@@ -48,12 +47,39 @@ config.readOnly = true;
 const ResultBoxView = observer((
   { exp }: { exp: Expression }) => (
     <ul>
-      <li>{'Latex: ' + exp.latex}</li>
+      <li>
+        <span>Latex:</span>
+        <MathfieldComponent
+          latex={exp.latex}
+          mathfieldConfig={config}
+        />
+      </li>
       <li>{'Result: ' + exp.eval}</li>
       <li>
         <span>Text:</span>
         <MathfieldComponent
           latex={exp.text}
+          mathfieldConfig={config}
+        />
+      </li>
+      <li>
+        <span>Roots:</span>
+        <MathfieldComponent
+          latex={exp.solve}
+          mathfieldConfig={config}
+        />
+      </li>
+      <li>
+        <span>Int:</span>
+        <MathfieldComponent
+          latex={exp.integrate}
+          mathfieldConfig={config}
+        />
+      </li>
+      <li>
+        <span>Diff:</span>
+        <MathfieldComponent
+          latex={exp.diff}
           mathfieldConfig={config}
         />
       </li>

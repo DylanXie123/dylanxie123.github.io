@@ -7,6 +7,14 @@ let expStr = '';
 
 describe('basic', () => {
 
+  test('fun', () => {
+    expStr = '3/4/5';
+    parser.parseLatex(expStr);
+    let exp = parser.toAlgebra(algebrite);
+    console.log(exp.toString())
+    // expect(algebrite.float(exp).d).toBeCloseTo(3);
+  })
+
   test('add', () => {
     expStr = '1+2';
     parser.parseLatex(expStr);

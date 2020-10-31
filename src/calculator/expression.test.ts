@@ -106,4 +106,7 @@ test('general test', () => {
   expStore.update('\\sin(e^{pi/3+1}+\\cos(4/4))');
   expect(Number(expStore.eval)).toBeCloseTo(0.9079);
 
+  // expStore.update('3/4/5');
+  // expect(Number(expStore.eval)).toBeCloseTo(0.15);
+
 })

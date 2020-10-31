@@ -21,14 +21,6 @@ export default class Expression {
     }
   }
 
-  // @computed get variables(): number[] {
-  //   try {
-  //     return [];
-  //   } catch (error) {
-  //     return [];
-  //   }
-  // }
-
   @computed get eval(): string {
     try {
       return algebrite.float(this.expression).d;
@@ -45,41 +37,29 @@ export default class Expression {
     }
   }
 
-  // @computed get solve(): string {
-  //   try {
-  //     if (this.expression.variables().length === 1) {
-  //       return this.expression.solveFor('x').toString();
-  //     } else {
-  //       return '';
-  //     }
-  //   } catch (error) {
-  //     return error;
-  //   }
-  // }
+  @computed get solve(): string {
+    try {
+      return algebrite.run("printlatex(" + algebrite.roots(this.expression) + ")");
+    } catch (error) {
+      return error;
+    }
+  }
 
-  // @computed get integrate(): string {
-  //   try {
-  //     return nerdamer.integrate(this.expression.text());
-  //   } catch (error) {
-  //     return error;
-  //   }
-  // }
+  @computed get integrate(): string {
+    try {
+      return algebrite.run("printlatex(" + algebrite.integral(this.expression) + ")");
+    } catch (error) {
+      return error;
+    }
+  }
 
-  // @computed get defint(): string {
-  //   try {
-  //     return nerdamer.defint(this.expression.text(), 0, 1);
-  //   } catch (error) {
-  //     return error;
-  //   }
-  // }
-
-  // @computed get diff(): string {
-  //   try {
-  //     return nerdamer.diff(this.expression.text());
-  //   } catch (error) {
-  //     return error;
-  //   }
-  // }
+  @computed get diff(): string {
+    try {
+      return algebrite.run("printlatex(" + algebrite.derivative(this.expression) + ")");
+    } catch (error) {
+      return error;
+    }
+  }
 
 }
 
