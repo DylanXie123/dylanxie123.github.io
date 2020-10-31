@@ -2,7 +2,7 @@ import { observer } from 'mobx-react';
 import React, { useContext } from 'react';
 import './expression';
 import Expression, { ExpContext, expStore } from './expression';
-import Plot from './plot';
+// import Plot from './plot';
 import { MathfieldComponent } from "react-mathlive";
 import { combineConfig } from 'react-mathlive/dist/MathfieldComponent';
 
