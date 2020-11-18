@@ -8,6 +8,10 @@ export default function Home() {
       <Link to="/calc">计算器</Link>
       <p></p>
       <Link to="/demo">演示</Link>
+      <p></p>
+      <a href="https://dylanxie123.github.io/blog/">
+        Blog
+      </a>
     </div>
   );
 }

@@ -22,6 +22,7 @@ function MathField() {
   const config = combineConfig(
     { initialLatex: '' }
   )
+  config.virtualKeyboardMode =  'auto';
   config.onContentDidChange = (mf) => exp.update(mf.getValue("latex-expanded"));
 
   return (
