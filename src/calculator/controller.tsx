@@ -6,7 +6,12 @@ export default class Controller {
 
   setController = (mf: Mathfield) => this.mfController = mf;
 
-  add = (expresstion: string) => this.mfController.insert(expresstion);
+  add = (expresstion: string) => this.mfController.insert(expresstion, { focus: true, format: "latex" });
+
+  backspace = () => this.mfController.executeCommand("deletePreviousChar");
+
+
+  clear = () => this.mfController.executeCommand("deleteAll");
 }
 
 export const controller = new Controller();
