@@ -6,7 +6,7 @@ export default class Controller {
 
   setController = (mf: Mathfield) => this.mfController = mf;
 
-  add = (expresstion: string) => this.mfController.setValue(expresstion);
+  add = (expresstion: string) => this.mfController.insert(expresstion);
 }
 
 export const controller = new Controller();
