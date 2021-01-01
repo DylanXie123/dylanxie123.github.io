@@ -1,13 +1,13 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { AppBar, Tab, Tabs } from '@material-ui/core';
 
 export default function Home() {
   return (
-    <div className="Home">
-      <h1>主页</h1>
-      <Link to="/calc">计算器</Link>
-      <p></p>
-      <Link to="/demo">演示</Link>
-    </div>
+    <AppBar>
+      <Tabs>
+        <Tab label="计算器" href="/calc"></Tab>
+        <Tab label="演示" href="/demo"></Tab>
+      </Tabs>
+    </AppBar>
   );
 }

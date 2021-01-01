@@ -7,14 +7,6 @@ let expStr = '';
 
 describe('basic', () => {
 
-  test('fun', () => {
-    expStr = '3/4/5';
-    parser.parseLatex(expStr);
-    let exp = parser.toAlgebra(algebrite);
-    console.log(exp.toString())
-    // expect(algebrite.float(exp).d).toBeCloseTo(3);
-  })
-
   test('add', () => {
     expStr = '1+2';
     parser.parseLatex(expStr);
@@ -46,6 +38,12 @@ describe('basic', () => {
     parser.parseLatex(expStr);
     let exp = parser.toAlgebra(algebrite);
     expect(algebrite.float(exp).d).toBeCloseTo(0.5);
+
+    expStr = '3/4/5';
+    parser.parseLatex(expStr);
+    exp = parser.toAlgebra(algebrite);
+    console.log(exp.toString())
+    expect(algebrite.float(exp).d).toBeCloseTo(0.15);
   })
 
   test('sin', () => {
@@ -196,5 +194,13 @@ describe('complex calc', () => {
     let exp = parser.toAlgebra(algebrite);
     expect(algebrite.float(exp.toString()).toString()).toBe('0.615385...+1.423077...*i');
   })
+
+  // test('matrix', () => {
+  //   expStr = '\\begin{bmatrix} a^2-b^2 & -1 \\\\ 1& 2ab \\end{bmatrix}';
+  //   parser.parseLatex(expStr);
+  //   let exp = parser.toAlgebra(algebrite);
+  //   console.log(exp.toString());
+  //   // expect(algebrite.float(exp.toString()).toString()).toBe('0.615385...+1.423077...*i');
+  // })
 
 })
