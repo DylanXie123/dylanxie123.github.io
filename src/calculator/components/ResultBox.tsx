@@ -1,58 +1,48 @@
 import { observer } from "mobx-react";
 import React, { useContext } from "react";
-import { combineConfig, MathfieldComponent } from "react-mathlive/dist/MathfieldComponent";
-import Expression, { ExpContext } from "../model/expression";
+import { ExpContext } from "../model/expression";
+import MathView from 'react-math-view';
 
-export default function ResultBox() {
+const ResultBox = observer(() => {
   const exp = useContext(ExpContext);
-  return (
-    <ResultBoxView exp={exp} />
-  );
-}
-
-const config = combineConfig(
-  { initialLatex: '' }
-)
-config.readOnly = true;
-
-const ResultBoxView = observer((
-  { exp }: { exp: Expression }) => (
-  <ul>
+  return (<ul>
     <li>
       <span>Latex:</span>
-      <MathfieldComponent
-        latex={exp.latex}
-        mathfieldConfig={config}
+      <MathView
+        value={exp.latex}
+        readOnly={true}
       />
     </li>
     <li>{'Result: ' + exp.eval}</li>
     <li>
       <span>Text:</span>
-      <MathfieldComponent
-        latex={exp.text}
-        mathfieldConfig={config}
+      <MathView
+        value={exp.text}
+        readOnly={true}
       />
     </li>
     <li>
       <span>Roots:</span>
-      <MathfieldComponent
-        latex={exp.solve}
-        mathfieldConfig={config}
+      <MathView
+        value={exp.solve}
+        readOnly={true}
       />
     </li>
     <li>
       <span>Int:</span>
-      <MathfieldComponent
-        latex={exp.integrate}
-        mathfieldConfig={config}
+      <MathView
+        value={exp.integrate}
+        readOnly={true}
       />
     </li>
     <li>
       <span>Diff:</span>
-      <MathfieldComponent
-        latex={exp.diff}
-        mathfieldConfig={config}
+      <MathView
+        value={exp.diff}
+        readOnly={true}
       />
     </li>
-  </ul>
-));
+  </ul>)
+});
+
+export default ResultBox;

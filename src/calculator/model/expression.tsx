@@ -23,7 +23,7 @@ export default class Expression {
     try {
       return this.expression.evaluate().text();
     } catch (error) {
-      return error;
+      return 'error';
     }
   }
 
@@ -31,7 +31,7 @@ export default class Expression {
     try {
       return this.expression.evaluate().text('fractions');
     } catch (error) {
-      return error;
+      return 'error';
     }
   }
 
@@ -39,7 +39,7 @@ export default class Expression {
     try {
       return this.expression.variables();
     } catch (error) {
-      return error;
+      return ['error'];
     }
   }
 
@@ -47,7 +47,7 @@ export default class Expression {
     try {
       return this.expression.solveFor('x').toString();
     } catch (error) {
-      return error;
+      return 'error';
     }
   }
 
@@ -55,7 +55,7 @@ export default class Expression {
     try {
       return nerdamer.integrate(this.expression, 'x').evaluate().text('fractions');
     } catch (error) {
-      return error;
+      return 'error';
     }
   }
 
@@ -63,7 +63,7 @@ export default class Expression {
     try {
       return nerdamer.diff(this.expression, 'x').evaluate().text('fractions');
     } catch (error) {
-      return error;
+      return 'error';
     }
   }
 

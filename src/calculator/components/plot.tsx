@@ -1,17 +1,10 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
 import functionPlot from 'function-plot';
-import Expression, { ExpContext } from '../model/expression';
+import { ExpContext } from '../model/expression';
 import { observer } from 'mobx-react';
 
-export default function Plot() {
-  return (
-  <ExpContext.Consumer>
-    {exp => <PlotView fn={exp}/>}
-  </ExpContext.Consumer>
-  );
-}
-
-const PlotView = observer(({ fn }: {fn: Expression}) => {
+const Plot = observer(() => {
+  const fn = useContext(ExpContext);
   const rootEl = useRef(null);
   const options = {
     target: "",
@@ -32,3 +25,5 @@ const PlotView = observer(({ fn }: {fn: Expression}) => {
 
   return (<div ref={rootEl} />)
 })
+
+export default Plot;
