@@ -1,29 +1,27 @@
 import { action, computed, observable } from "mobx";
 import React from "react";
-const algebraLatex = require('algebra-latex');
-const algebrite = require('algebrite');
-
-const parser = new algebraLatex();
+import nerdamer from 'nerdamer';
+const nerdamerAll = require('nerdamer/all');
 
 export default class Expression {
   @observable latex: string = '';
 
-  @observable private expression: any;
+  @observable
+  private expression!: nerdamer.Expression;
 
   @action
   update = (input: string) => {
     this.latex = input;
     try {
-      parser.parseLatex(input);
-      this.expression = parser.toAlgebra(algebrite);
+      this.expression = nerdamerAll.convertFromLaTeX(input) as nerdamer.Expression;
     } catch (error) {
-      this.expression = null;
+      this.expression = nerdamer('');
     }
   }
 
   @computed get eval(): string {
     try {
-      return algebrite.float(this.expression).d;
+      return this.expression.evaluate().text();
     } catch (error) {
       return error;
     }
@@ -31,7 +29,15 @@ export default class Expression {
 
   @computed get text(): string {
     try {
-      return algebrite.run("printlatex(" + this.expression.toString() + ")");
+      return this.expression.evaluate().text('fractions');
+    } catch (error) {
+      return error;
+    }
+  }
+
+  @computed get variable(): string[] {
+    try {
+      return this.expression.variables();
     } catch (error) {
       return error;
     }
@@ -39,7 +45,7 @@ export default class Expression {
 
   @computed get solve(): string {
     try {
-      return algebrite.run("printlatex(" + algebrite.roots(this.expression) + ")");
+      return this.expression.solveFor('x').toString();
     } catch (error) {
       return error;
     }
@@ -47,7 +53,7 @@ export default class Expression {
 
   @computed get integrate(): string {
     try {
-      return algebrite.run("printlatex(" + algebrite.integral(this.expression) + ")");
+      return nerdamer.integrate(this.expression, 'x').evaluate().text('fractions');
     } catch (error) {
       return error;
     }
@@ -55,7 +61,7 @@ export default class Expression {
 
   @computed get diff(): string {
     try {
-      return algebrite.run("printlatex(" + algebrite.derivative(this.expression) + ")");
+      return nerdamer.diff(this.expression, 'x').evaluate().text('fractions');
     } catch (error) {
       return error;
     }
