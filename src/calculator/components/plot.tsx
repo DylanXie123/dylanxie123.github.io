@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import functionPlot from 'function-plot';
-import Expression, { ExpContext } from './expression';
+import Expression, { ExpContext } from '../model/expression';
 import { observer } from 'mobx-react';
 
 export default function Plot() {

@@ -1,12 +1,11 @@
 import { observer } from 'mobx-react';
 import React, { useContext } from 'react';
-import './expression';
-import Expression, { ExpContext, expStore } from './expression';
-// import Plot from './plot';
+import './model/expression';
+import Expression, { ExpContext, expStore } from './model/expression';
 import { MathfieldComponent } from "react-mathlive";
 import { combineConfig } from 'react-mathlive/dist/MathfieldComponent';
-import { ControllerContext, controller } from './controller';
-import MathKeyboard from './keyboard';
+import { ControllerContext, controller } from './model/controller';
+import MathKeyboard from './components/keyboard';
 
 export default function Calculator() {
   return (
@@ -14,7 +13,6 @@ export default function Calculator() {
       <ExpContext.Provider value={expStore}>
         <MathField />
         <ResultBox />
-        {/* <Plot /> */}
       </ExpContext.Provider>
       <MathKeyboard></MathKeyboard>
     </ControllerContext.Provider>

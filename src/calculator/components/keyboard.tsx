@@ -1,7 +1,7 @@
 import { Button } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
 import React, { MouseEventHandler, useContext } from "react";
-import { ControllerContext } from "./controller";
+import { ControllerContext } from "../model/controller";
 
 const keys = ['1', '2', '3', '+', '*', '(', ')', '_{#?}', '^{#?}', '\\sin', '\\frac{#?}{#?}'];
 

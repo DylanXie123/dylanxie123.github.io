@@ -2,7 +2,7 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 import Home from "./Home";
 import App from "./demo/App";
-import Calculator from "./calculator/calculator";
+import Calculator from "./calculator";
 
 export default function Router() {
   return (

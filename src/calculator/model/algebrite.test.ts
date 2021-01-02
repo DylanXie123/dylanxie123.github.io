@@ -42,7 +42,6 @@ describe('basic', () => {
     expStr = '3/4/5';
     parser.parseLatex(expStr);
     exp = parser.toAlgebra(algebrite);
-    console.log(exp.toString())
     expect(algebrite.float(exp).d).toBeCloseTo(0.15);
   })
 
