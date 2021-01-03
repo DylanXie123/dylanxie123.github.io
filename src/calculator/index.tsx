@@ -5,6 +5,7 @@ import { ControllerContext, controller } from './model/controller';
 import MathKeyboard from './components/MathKeyboard';
 import MathBox from './components/MathBox'
 import ResultBox from './components/ResultBox'
+import './style.css'
 
 export default function Calculator() {
   return (
