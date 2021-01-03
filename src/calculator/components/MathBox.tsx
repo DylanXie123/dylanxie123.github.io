@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 import { ExpContext } from "../model/expression";
 import { ControllerContext } from '../model/controller';
 import MathView from "react-math-view";
-import { MathfieldElement } from 'mathlive';
 
 export default function MathBox() {
   const exp = useContext(ExpContext);
@@ -12,7 +11,11 @@ export default function MathBox() {
     <MathView
       virtualKeyboardMode='off'
       onContentDidChange={(mf) => exp.update(mf.getValue("latex-expanded"))}
-      ref={(mfe) => controller.setController(mfe as unknown as MathfieldElement)}
+      ref={(mfe) => {
+        if (mfe) {
+          controller.setController(mfe!);
+        }
+      }}
     />
   );
 }
