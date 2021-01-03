@@ -22,13 +22,13 @@
     "function-plot": "^1.22.2",
     "mathlive": "^0.59.0",
     "mobx": "^5.15.7",
-    "mobx-react": "^6.3.1",
+    "mobx-react-lite": "^2.2.2",
     "nerdamer": "^1.1.6",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "react-math-view": "^1.2.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.3"
+    "react-scripts": "^4.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
