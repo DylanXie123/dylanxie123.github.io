@@ -3,7 +3,6 @@ import React, { useContext } from "react";
 import { ExpContext } from "../model/expression";
 import MathView from 'react-math-view';
 import { Container, List } from "@material-ui/core";
-import { css } from "@emotion/css";
 
 const ResultBox = observer(() => {
   const exp = useContext(ExpContext);
@@ -39,14 +38,8 @@ interface InfoBoxProp {
 }
 
 function InfoBox(prop: InfoBoxProp) {
-  return (<Container className={css({
-    border: '1pt',
-    borderStyle: 'solid',
-    margin: '2pt'
-  })}>
-    <p className={css({
-      backgroundColor: 'yellow'
-    })}>{prop.title}</p>
+  return (<Container className='info-box'>
+    <p>{prop.title}</p>
     <MathView
       value={prop.content}
       readOnly={true}
