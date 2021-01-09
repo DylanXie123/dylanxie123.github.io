@@ -4,7 +4,7 @@ import nerdamer from 'nerdamer';
 const nerdamerAll = require('nerdamer/all');
 
 export default class Expression {
-  @observable latex: string = '';
+  private latex: string = '';
 
   @observable
   private expression!: nerdamer.Expression;
@@ -29,7 +29,7 @@ export default class Expression {
 
   @computed get text(): string {
     try {
-      return this.expression.evaluate().text('fractions');
+      return this.expression.toTeX();
     } catch (error) {
       return 'error';
     }
@@ -45,7 +45,7 @@ export default class Expression {
 
   @computed get solve(): string {
     try {
-      return this.expression.solveFor('x').toString();
+      return this.expression.solveFor('x').toTeX();
     } catch (error) {
       return 'error';
     }
@@ -53,7 +53,7 @@ export default class Expression {
 
   @computed get integrate(): string {
     try {
-      return nerdamer.integrate(this.expression, 'x').evaluate().text('fractions');
+      return nerdamer.integrate(this.expression, 'x').toTeX();
     } catch (error) {
       return 'error';
     }
@@ -61,7 +61,7 @@ export default class Expression {
 
   @computed get diff(): string {
     try {
-      return nerdamer.diff(this.expression, 'x').evaluate().text('fractions');
+      return nerdamer.diff(this.expression, 'x').toTeX();
     } catch (error) {
       return 'error';
     }

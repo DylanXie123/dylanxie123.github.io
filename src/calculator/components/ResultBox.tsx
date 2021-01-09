@@ -6,7 +6,6 @@ import { Container, List } from "@material-ui/core";
 
 const ResultBox = observer(() => {
   const exp = useContext(ExpContext);
-  console.log(exp.latex);
 
   return (<List>
     <InfoBox

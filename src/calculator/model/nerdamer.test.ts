@@ -32,16 +32,15 @@ test('basic', () => {
 })
 
 test('symbolic output', () => {
-  
   const testSample: Map<string, string> = new Map([
     ['e+1-1', 'e'],
-    ['\\sin{pi/3}', '(1/2)*sqrt(3)'],
-    ['4/6', '2/3'],
+    ['\\sin{pi/3}', '\\frac{\\sqrt{3}}{2}'],
+    ['4/6', '\\frac{2}{3}'],
   ]);
 
   testSample.forEach((result, expStr) => {
     let expression = nerdamerAll.convertFromLaTeX(expStr) as nerdamer.Expression;
-    let calcResult = expression.text('fractions');
+    let calcResult = expression.toTeX();
     expect(calcResult).toBe(result);
   })
 
@@ -53,32 +52,32 @@ describe('function calc', () => {
     expStr = 'x^2';
     let expression = nerdamerAll.convertFromLaTeX(expStr) as nerdamer.Expression;
     let integration = nerdamer.integrate(expression, 'x');
-    let calcResult = integration.evaluate().text('fractions');
-    expect(calcResult).toBe('(1/3)*x^3');
+    let calcResult = integration.toTeX();
+    expect(calcResult).toBe('\\frac{x^{3}}{3}');
   })
 
   test('diff', () => {
     expStr = 'x^2';
     let expression = nerdamerAll.convertFromLaTeX(expStr) as nerdamer.Expression;
     let integration = nerdamer.diff(expression, 'x');
-    let calcResult = integration.evaluate().text('fractions');
-    expect(calcResult).toBe('2*x');
+    let calcResult = integration.toTeX();
+    expect(calcResult).toBe('2 \\cdot x');
   })
 
   test('defint', () => {
     expStr = 'x^2';
     let expression = nerdamerAll.convertFromLaTeX(expStr) as nerdamer.Expression;
     let integration = nerdamerAll(`defint(${expression.evaluate().text()}, 0, 2)`) as nerdamer.Expression;
-    let calcResult = integration.evaluate().text('fractions');
-    expect(calcResult).toBe('8/3');
+    let calcResult = integration.evaluate().toTeX();
+    expect(calcResult).toBe('\\frac{8}{3}');
   })
 
   test('simplify', () => {
     expStr = 'a*b+a*c';
     let expression = nerdamerAll.convertFromLaTeX(expStr) as nerdamer.Expression;
     let simplify = nerdamerAll(`simplify(${expression.evaluate().text()})`) as nerdamer.Expression;
-    let calcResult = simplify.evaluate().text('fractions');
-    expect(calcResult).toBe('(b+c)*a');
+    let calcResult = simplify.toTeX();
+    expect(calcResult).toBe('\\left(b+c\\right) \\cdot a');
   })
 
 })
@@ -94,20 +93,61 @@ describe('solve', () => {
 
 })
 
+describe('matrix', () => {
+
+  test('matrix input', () => {
+    expStr = 'matrix([0,3],[5,6])';
+    let expression = nerdamerAll(expStr) as nerdamer.Expression;
+    let calcResult = expression.evaluate().text();
+    expect(calcResult).toBe('matrix([0],[3],[5],[6])');
+
+    // expStr = '\\begin{matrix}0 & 3 \\ 5 & 6\\end{matrix}';
+    // expression = nerdamerAll.convertFromLaTeX(expStr) as nerdamer.Expression;
+    // calcResult = expression.evaluate().toTeX();
+    // console.log(calcResult);
+    // expect(calcResult).toBe('matrix([0],[3],[5],[6])');
+  })
+
+  test('matrix multiply', () => {
+    expStr = 'matrix([0,3],[5,6])*2';
+    let expression = nerdamerAll(expStr) as nerdamer.Expression;
+    let calcResult = expression.evaluate().text();
+    expect(calcResult).toBe('matrix([0],[6],[10],[12])');
+
+    expStr = 'matrix([0,3],[5,6])*matrix([0,3],[5,6])';
+    expression = nerdamerAll(expStr) as nerdamer.Expression;
+    calcResult = expression.evaluate().text();
+    expect(calcResult).toBe('matrix([15],[18],[30],[51])');
+
+    expStr = 'matrix([0,3],[5,6])*matrix([3],[5])';
+    expression = nerdamerAll(expStr) as nerdamer.Expression;
+    calcResult = expression.evaluate().text();
+    expect(calcResult).toBe('matrix([15],[45])');
+  })
+
+  test('invert matrix', () => {
+    expStr = 'invert(matrix([0,3],[5,6]))';
+    let expression = nerdamerAll(expStr) as nerdamer.Expression;
+    let calcResult = expression.evaluate().text();
+    expect(calcResult).toBe('matrix([-2/5],[1/5],[1/3],[0])');
+  })
+
+})
+
 describe('complex calc', () => {
 
   test('plus & minus', () => {
     expStr = '1+i+5+i-9-7*i';
     let expression = nerdamerAll.convertFromLaTeX(expStr) as nerdamer.Expression;
-    let calcResult = expression.evaluate().text();
-    expect(calcResult.toString()).toBe('-3-5*i');
+    let calcResult = expression.evaluate().toTeX();
+    expect(calcResult.toString()).toBe('-5 \\cdot i-3');
   })
 
   test('times & divide', () => {
     expStr = '(1+2*i)*(4+3*i)/(6+4*i)';
     let expression = nerdamerAll.convertFromLaTeX(expStr) as nerdamer.Expression;
-    let calcResult = expression.evaluate().text();
-    expect(calcResult.toString()).toBe('(1+2*i)*(3*i+4)*(4*i+6)^(-1)');
+    let calcResult = expression.evaluate().toTeX();
+    expect(calcResult.toString()).toBe('\\frac{\\left(2 \\cdot i+1\\right) \\cdot \\left(3 \\cdot i+4\\right)}{4 \\cdot i+6}');
   })
 
 })
