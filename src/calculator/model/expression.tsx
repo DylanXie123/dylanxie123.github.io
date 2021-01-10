@@ -4,16 +4,15 @@ import nerdamer from 'nerdamer';
 const nerdamerAll = require('nerdamer/all');
 
 export default class Expression {
-  private latex: string = '';
 
   @observable
   private expression!: nerdamer.Expression;
 
   @action
-  update = (input: string) => {
-    this.latex = input;
+  update = (latex: string) => {
+    dis2calc.forEach((v, k) => latex = latex.replaceAll(k, v));
     try {
-      this.expression = nerdamerAll.convertFromLaTeX(input) as nerdamer.Expression;
+      this.expression = nerdamerAll.convertFromLaTeX(latex) as nerdamer.Expression;
     } catch (error) {
       this.expression = nerdamer('');
     }
@@ -29,7 +28,10 @@ export default class Expression {
 
   @computed get text(): string {
     try {
-      return this.expression.toTeX();
+      // TODO: Implement only here, find a better way to implement to all method
+      let result = this.expression.toTeX();
+      calc2dis.forEach((v, k) => result = result.replaceAll(k, v));
+      return result;
     } catch (error) {
       return 'error';
     }
@@ -68,6 +70,15 @@ export default class Expression {
   }
 
 }
+
+// TODO: Need a better way to handle display and calc conversion
+const dis2calc = new Map<string, string>([
+  ['\\times', '*'],
+]);
+
+const calc2dis = new Map<string, string>([
+  ['\\cdot', '\\times'],
+]);
 
 export const expStore = new Expression();
 export const ExpContext = React.createContext<Expression>(expStore);
