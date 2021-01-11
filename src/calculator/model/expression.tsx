@@ -3,14 +3,24 @@ import React from "react";
 import nerdamer from 'nerdamer';
 const nerdamerAll = require('nerdamer/all');
 
+export enum Mode {
+  Eval = 0,
+  Var,
+  Defint,
+  Limit,
+  Matrix,
+};
+
 export default class Expression {
+  private latex: string = '';
 
   @observable
   private expression!: nerdamer.Expression;
 
   @action
   update = (latex: string) => {
-    dis2calc.forEach((v, k) => latex = latex.replaceAll(k, v));
+    this.latex = latex;
+    dis2calc.forEach((v, k) => latex = latex.replace(new RegExp(k, 'g'), v));
     try {
       this.expression = nerdamerAll.convertFromLaTeX(latex) as nerdamer.Expression;
     } catch (error) {
@@ -30,18 +40,28 @@ export default class Expression {
     try {
       // TODO: Implement only here, find a better way to implement to all method
       let result = this.expression.toTeX();
-      calc2dis.forEach((v, k) => result = result.replaceAll(k, v));
+      calc2dis.forEach((v, k) => result = result.replace(new RegExp(k, 'g'), v));
       return result;
     } catch (error) {
       return 'error';
     }
   }
 
-  @computed get variable(): string[] {
+  @computed get mode(): Mode {
     try {
-      return this.expression.variables();
+      if (this.latex.search('int') > 0) {
+        return Mode.Defint;
+      } else if (this.latex.search('limit') > 0) {
+        return Mode.Limit;
+      } else if (this.latex.search('matrix') > 0) {
+        return Mode.Matrix;
+      } else if (this.expression.variables().length !== 0) {
+        return Mode.Var;
+      } else {
+        return Mode.Eval;
+      }
     } catch (error) {
-      return ['error'];
+      return Mode.Eval;
     }
   }
 
@@ -72,12 +92,13 @@ export default class Expression {
 }
 
 // TODO: Need a better way to handle display and calc conversion
+// use regexp now
 const dis2calc = new Map<string, string>([
-  ['\\times', '*'],
+  ['\\\\times', '*'],
 ]);
 
 const calc2dis = new Map<string, string>([
-  ['\\cdot', '\\times'],
+  ['\\\\cdot', '\\times'],
 ]);
 
 export const expStore = new Expression();

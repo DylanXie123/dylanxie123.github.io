@@ -1,50 +1,56 @@
 import { observer } from "mobx-react-lite";
 import React, { useContext } from "react";
-import { ExpContext } from "../model/expression";
+import { ExpContext, Mode } from "../model/expression";
 import MathView from 'react-math-view';
-import { Container, List } from "@material-ui/core";
 
 const ResultBox = observer(() => {
   const exp = useContext(ExpContext);
 
-  return (<List>
-    <InfoBox
-      title={'Eval'}
-      content={exp.eval}
-    />
-    <InfoBox
-      title={'Text'}
-      content={exp.text}
-    />
-    <InfoBox
-      title={'Roots'}
-      content={exp.solve}
-    />
-    <InfoBox
-      title={'Int'}
-      content={exp.integrate}
-    />
-    <InfoBox
-      title={'Diff'}
-      content={exp.diff}
-    />
-  </List>)
+  switch (exp.mode) {
+    case Mode.Eval:
+      return (<EvalResultBox />);
+    case Mode.Var:
+      return (<SymResultBox />);
+    default:
+      return (<EvalResultBox />);
+  }
+});
+
+const EvalResultBox = observer(() => {
+  const exp = useContext(ExpContext);
+  const evalResult = exp.eval;
+  const textResult = exp.text;
+
+  if (evalResult === textResult) {
+    return (<InfoBox content={`=${evalResult}`} />);
+  }
+
+  return (<div>
+    <InfoBox content={`=${exp.eval}`} />
+    <InfoBox content={`=${exp.text}`} />
+  </div>);
+});
+
+
+const SymResultBox = observer(() => {
+  const exp = useContext(ExpContext);
+
+  return (<div>
+    <InfoBox content={`=${exp.integrate}`} />
+    <InfoBox content={`=${exp.diff}`} />
+  </div>);
 });
 
 interface InfoBoxProp {
-  title: string,
   content: string,
 }
 
 function InfoBox(prop: InfoBoxProp) {
-  return (<Container className='info-box'>
-    <p>{prop.title}</p>
-    <MathView
-      value={prop.content}
-      readOnly={true}
-    />
-  </Container>);
-
+  return (<MathView
+    value={prop.content}
+    readOnly={true}
+    style={{ outline: 0, fontSize: '1.2em' }}
+  />);
 }
 
 export default ResultBox;
