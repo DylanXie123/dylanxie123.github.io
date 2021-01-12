@@ -151,3 +151,16 @@ describe('complex calc', () => {
   })
 
 })
+
+test('error input test', () => {
+  let expression = nerdamerAll.convertFromLaTeX('') as nerdamer.Expression;
+  expect(() => expression.text('decimals')).toThrowError();
+  expect(() => expression.text('fractions')).toThrowError();
+  expect(() => expression.evaluate()).toThrowError();
+
+  expect(() => nerdamerAll.convertFromLaTeX('1+')).toThrowError();
+  expect(() => nerdamerAll.convertFromLaTeX('\\sin(2\\tim')).toThrowError();
+
+  expression = nerdamer('') as nerdamer.Expression;
+  expect(expression.text()).toBe('0');
+})

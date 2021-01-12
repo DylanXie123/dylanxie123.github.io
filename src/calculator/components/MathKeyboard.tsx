@@ -3,11 +3,11 @@ import { Grid } from "@material-ui/core";
 import React, { MouseEventHandler, useContext } from "react";
 import { ControllerContext } from "../model/controller";
 
-const keys = ['1', '2', '3', '0', '+', '*', '(', ')', '_{#?}', '^{#?}', '\\sin', '\\frac{#?}{#@}','\\left[\\begin{matrix} #? & #? \\\\ #? & #? \\end{matrix}\\right]', '\\div'];
+const keys = ['1', '2', '3', '0', '+', '\\times', '\\sin', '\\frac{#@}{#?}','\\arcsin', '\\div'];
 
 export default function MathKeyboard() {
   const controller = useContext(ControllerContext);
-  return (<Grid md={5}>
+  return (<Grid>
     {keys.map((s) =>
       <MathKey
         onclick={() => controller.add(s)}>

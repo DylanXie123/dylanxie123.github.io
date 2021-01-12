@@ -1,97 +1,40 @@
 import { expStore } from './expression';
 
-describe('function test', () => {
+describe('parser test', () => {
 
-  test('sin', () => {
-    expStore.update('\\sin(2)');
-    expect(Number(expStore.eval)).toBeCloseTo(Math.sin(2));
-
-    // expStore.update('\\sin(45\\degree)');
-    // expect(Number(expStore.eval)).toBeCloseTo(Math.sin(Math.PI / 4));
+  test('input', () => {
+    const inputTestSample: Map<string, number> = new Map([
+      ['1\\times2', 2],
+      ['1\\div2', 0.5],
+      ['\\arcsin(1)', Math.PI / 2],
+    ]);
+    inputTestSample.forEach((v, k) => {
+      expStore.update(k);
+      const result = Number(expStore.eval);
+      expect(result).toBeCloseTo(v);
+    });
   })
 
-  test('cos', () => {
-    expStore.update('\\cos(2)');
-    expect(Number(expStore.eval)).toBeCloseTo(Math.cos(2));
-  })
-
-  test('tan', () => {
-    expStore.update('\\tan(2)');
-    expect(Number(expStore.eval)).toBeCloseTo(Math.tan(2));
-  })
-
-  test('arcsin', () => {
-    expStore.update('\\arcsin(0.2)');
-    expect(Number(expStore.eval)).toBeCloseTo(Math.asin(0.2));
-  })
-
-  test('arccos', () => {
-    expStore.update('\\arccos(0.2)');
-    expect(Number(expStore.eval)).toBeCloseTo(Math.acos(0.2));
-  })
-
-  test('arctan', () => {
-    expStore.update('\\arctan(0.2)');
-    expect(Number(expStore.eval)).toBeCloseTo(Math.atan(0.2));
-  })
-
-  test('ln', () => {
-    expStore.update('\\log(e+10)');
-    expect(Number(expStore.eval)).toBeCloseTo(Math.log(Math.E + 10));
-
-    // expStore.update('\\ln(e+10)');
-    // expect(Number(expStore.eval)).toBeCloseTo(Math.log(Math.E + 10));
-  })
-
-  test('lg', () => {
-    // expStore.update('\\lg(e+10)');
-    // expect(Number(expStore.eval)).toBeCloseTo(Math.log10(Math.E + 10));
-  })
-
-  test('sqrt', () => {
-    expStore.update('\\sqrt{5}');
-    expect(Number(expStore.eval)).toBeCloseTo(Math.sqrt(5));
-
-    // expStore.update('\\sqrt[]{5}');
-    // expect(Number(expStore.eval)).toBeCloseTo(Math.sqrt(5));
+  test('output', () => {
+    const outputTestSample: Map<string, string> = new Map([
+      ['e\\times\\pi', 'e \\times \\pi'],
+    ]);
+    outputTestSample.forEach((v, k) => {
+      expStore.update(k);
+      expect(expStore.text).toBe(v);
+    });
   })
 
 })
 
-describe('operation test', () => {
+// TODO: Need more test about error input
+test('error input test', () => {
 
-  test('plus', () => {
-    expStore.update('1+2');
-    expect(Number(expStore.eval)).toBeCloseTo(3);
-  })
-
-  test('minus', () => {
-    expStore.update('1-2');
-    expect(Number(expStore.eval)).toBeCloseTo(-1);
-  })
-
-  test('times', () => {
-    expStore.update('1*2');
-    expect(Number(expStore.eval)).toBeCloseTo(2);
-    // expStore.update('1\\times 2');
-    // expect(Number(expStore.eval)).toBeCloseTo(2);
-    expStore.update('1\\cdot 2');
-    expect(Number(expStore.eval)).toBeCloseTo(2);
-  })
-
-  test('divide', () => {
-    expStore.update('\\frac{1}{2}');
-    expect(Number(expStore.eval)).toBeCloseTo(1 / 2);
-    expStore.update('1/2');
-    expect(Number(expStore.eval)).toBeCloseTo(1 / 2);
-    // expStore.update('1÷2');
-    // expect(Number(expStore.eval)).toBeCloseTo(1 / 2);
-  })
-
-  test('exp', () => {
-    expStore.update('e^{2}');
-    expect(Number(expStore.eval)).toBeCloseTo(Math.pow(Math.E, 2));
-  })
+  expStore.update('1+');
+  expect(expStore.eval).toBe(undefined);
+  
+  // expStore.update('x+');
+  // expect(expStore.integrate).toBe(undefined);
 
 })
 
@@ -106,7 +49,7 @@ test('general test', () => {
   expStore.update('\\sin(e^{pi/3+1}+\\cos(4/4))');
   expect(Number(expStore.eval)).toBeCloseTo(0.9079);
 
-  // expStore.update('3/4/5');
-  // expect(Number(expStore.eval)).toBeCloseTo(0.15);
+  expStore.update('3/4/5');
+  expect(Number(expStore.eval)).toBeCloseTo(0.15);
 
 })

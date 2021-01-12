@@ -15,7 +15,7 @@ export default class Expression {
   private latex: string = '';
 
   @observable
-  private expression!: nerdamer.Expression;
+  private expression: nerdamer.Expression | undefined = undefined;
 
   @action
   update = (latex: string) => {
@@ -24,26 +24,26 @@ export default class Expression {
     try {
       this.expression = nerdamerAll.convertFromLaTeX(latex) as nerdamer.Expression;
     } catch (error) {
-      this.expression = nerdamer('');
+      this.expression = undefined;
     }
   }
 
-  @computed get eval(): string {
+  @computed get eval() {
     try {
-      return this.expression.evaluate().text();
+      return this.expression?.evaluate().text();
     } catch (error) {
-      return 'error';
+      return undefined;
     }
   }
 
-  @computed get text(): string {
+  @computed get text() {
     try {
       // TODO: Implement only here, find a better way to implement to all method
-      let result = this.expression.toTeX();
-      calc2dis.forEach((v, k) => result = result.replace(new RegExp(k, 'g'), v));
+      let result = this.expression?.toTeX();
+      calc2dis.forEach((v, k) => result = result?.replace(new RegExp(k, 'g'), v));
       return result;
     } catch (error) {
-      return 'error';
+      return undefined;
     }
   }
 
@@ -55,7 +55,7 @@ export default class Expression {
         return Mode.Limit;
       } else if (this.latex.search('matrix') > 0) {
         return Mode.Matrix;
-      } else if (this.expression.variables().length !== 0) {
+      } else if (this.expression && this.expression?.variables().length !== 0) {
         return Mode.Var;
       } else {
         return Mode.Eval;
@@ -65,27 +65,27 @@ export default class Expression {
     }
   }
 
-  @computed get solve(): string {
+  @computed get solve() {
     try {
-      return this.expression.solveFor('x').toTeX();
+      return this.expression?.solveFor('x').toTeX();
     } catch (error) {
-      return 'error';
+      return undefined;
     }
   }
 
-  @computed get integrate(): string {
+  @computed get integrate() {
     try {
-      return nerdamer.integrate(this.expression, 'x').toTeX();
+      return nerdamer.integrate(this.expression!, 'x').toTeX();
     } catch (error) {
-      return 'error';
+      return undefined;
     }
   }
 
-  @computed get diff(): string {
+  @computed get diff() {
     try {
-      return nerdamer.diff(this.expression, 'x').toTeX();
+      return nerdamer.diff(this.expression!, 'x').toTeX();
     } catch (error) {
-      return 'error';
+      return undefined;
     }
   }
 
@@ -95,6 +95,8 @@ export default class Expression {
 // use regexp now
 const dis2calc = new Map<string, string>([
   ['\\\\times', '*'],
+  ['\\\\div', '/'],
+  ['\\\\arcsin', '\\asin'],
 ]);
 
 const calc2dis = new Map<string, string>([

@@ -22,12 +22,16 @@ const EvalResultBox = observer(() => {
   const evalResult = exp.eval;
   const textResult = exp.text;
 
+  if (evalResult === undefined) {
+    return <div></div>;
+  }
+
   if (evalResult === textResult) {
     return (<InfoBox content={`=${evalResult}`} />);
   }
 
   return (<div>
-    <InfoBox content={`=${exp.eval}`}/>
+    <InfoBox content={`=${exp.eval}`} />
     <InfoBox content={`=${exp.text}`} />
   </div>);
 });
@@ -35,6 +39,10 @@ const EvalResultBox = observer(() => {
 
 const SymResultBox = observer(() => {
   const exp = useContext(ExpContext);
+
+  if (exp.integrate === undefined) {
+    return <div></div>;
+  }
 
   return (<div>
     <InfoBox content={`=${exp.integrate}`} />
