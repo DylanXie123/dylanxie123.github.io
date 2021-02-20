@@ -9,9 +9,15 @@ const ResultBox = observer(() => {
 
   switch (exp.mode) {
     case Mode.Eval:
-      return (<EvalResultBox />);
+      return (<>
+        <p>{exp.latex}</p>
+        <EvalResultBox />
+      </>);
     case Mode.Var:
-      return (<SymResultBox />);
+      return (<>
+        <p>{exp.latex}</p>
+        <SymResultBox />
+      </>);
     default:
       return (<EvalResultBox />);
   }
