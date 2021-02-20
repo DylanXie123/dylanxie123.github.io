@@ -1,24 +1,24 @@
 {
   "files": {
     "main.css": "/static/css/main.05fb5583.chunk.css",
-    "main.js": "/static/js/main.9c37ea7f.chunk.js",
-    "main.js.map": "/static/js/main.9c37ea7f.chunk.js.map",
+    "main.js": "/static/js/main.58dd4552.chunk.js",
+    "main.js.map": "/static/js/main.58dd4552.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.0a15a364.js",
     "runtime-main.js.map": "/static/js/runtime-main.0a15a364.js.map",
     "static/css/2.5b246283.chunk.css": "/static/css/2.5b246283.chunk.css",
-    "static/js/2.6f3014ee.chunk.js": "/static/js/2.6f3014ee.chunk.js",
-    "static/js/2.6f3014ee.chunk.js.map": "/static/js/2.6f3014ee.chunk.js.map",
+    "static/js/2.287dfd13.chunk.js": "/static/js/2.287dfd13.chunk.js",
+    "static/js/2.287dfd13.chunk.js.map": "/static/js/2.287dfd13.chunk.js.map",
     "index.html": "/index.html",
     "static/css/2.5b246283.chunk.css.map": "/static/css/2.5b246283.chunk.css.map",
     "static/css/main.05fb5583.chunk.css.map": "/static/css/main.05fb5583.chunk.css.map",
-    "static/js/2.6f3014ee.chunk.js.LICENSE.txt": "/static/js/2.6f3014ee.chunk.js.LICENSE.txt",
+    "static/js/2.287dfd13.chunk.js.LICENSE.txt": "/static/js/2.287dfd13.chunk.js.LICENSE.txt",
     "static/media/mathlive-fonts.css": "/static/media/KaTeX_Typewriter-Regular.5233b891.woff"
   },
   "entrypoints": [
     "static/js/runtime-main.0a15a364.js",
     "static/css/2.5b246283.chunk.css",
-    "static/js/2.6f3014ee.chunk.js",
+    "static/js/2.287dfd13.chunk.js",
     "static/css/main.05fb5583.chunk.css",
-    "static/js/main.9c37ea7f.chunk.js"
+    "static/js/main.58dd4552.chunk.js"
   ]
 }
