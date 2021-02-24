@@ -21,11 +21,11 @@ export default function MathKeyboard() {
     <Grid className={classes.grid} container justify={'center'}>
       <Grid container item justify={'center'} xs={8} >
         {ExtraKeyboard().map(
-          (klist) => (
-            <Grid container item justify={'center'} >
+          (klist, index) => (
+            <Grid container item key={index} justify={'center'} >
               {klist.map(
-                (k) => (
-                  <Grid item xs={2}>
+                (k, index) => (
+                  <Grid item key={index} xs={2}>
                     <MathKey children={k.children} onclick={k.onclick} />
                   </Grid>
                 )
@@ -36,12 +36,12 @@ export default function MathKeyboard() {
       </Grid>
       <Grid container item justify={'center'} xs={8}>
         {BasicKeyboard().map(
-          (klist) => (
-            <Grid container item justify={'center'} >
+          (klist, index) => (
+            <Grid container item key={index} justify={'center'} >
               {klist.map(
-                (l) => (
-                  <Grid item xs={2}>
-                    <MathKey children={l.children} onclick={l.onclick} />
+                (k, index) => (
+                  <Grid item key={index} xs={2}>
+                    <MathKey children={k.children} onclick={k.onclick} />
                   </Grid>
                 )
               )}
@@ -141,12 +141,13 @@ function MathKey(prop: MathKeyProp) {
       variant='outlined'
       color="primary"
       onClick={prop.onclick}
+      style={{ textTransform: 'lowercase' }}
     >
       {typeof prop.children === 'string' ?
         <MathView
           value={prop.children}
           readOnly={true}
-          style={{ outline: 0 }}
+          style={{ outline: 0, height: '24px', fontSize: '1em', position: 'relative', bottom: '7px' }}
         /> :
         prop.children}
     </Button>
