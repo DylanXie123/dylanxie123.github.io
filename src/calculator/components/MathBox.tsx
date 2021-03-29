@@ -9,7 +9,7 @@ export default function MathBox() {
 
   return (
     <MathView
-      virtualKeyboardMode='off'
+      virtualKeyboardMode='onfocus'
       onContentDidChange={(mf) => exp.update(mf.getValue("latex-expanded"))}
       style={{ outline: 0 }}
       ref={(mfe) => {
