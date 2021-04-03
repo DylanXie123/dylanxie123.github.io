@@ -11,7 +11,8 @@ export default function MathBox() {
     <MathView
       virtualKeyboardMode='onfocus'
       onContentDidChange={(mf) => exp.update(mf.getValue("latex-expanded"))}
-      style={{ outline: 0 }}
+      style={{ outline: 0, fontSize: 24, margin: 5, padding: 5, border: '2px dashed black' }}
+      
       ref={(mfe) => {
         if (mfe) {
           controller.setController(mfe!);
