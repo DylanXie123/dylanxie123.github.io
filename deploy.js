@@ -3,7 +3,7 @@
 // 根据你的路径修改routes
 const routes = [
   'calc',
-  'demo',
+  'movie',
 ]
 
 // 给每个route都新建一个文件夹，把index.html拷贝进去

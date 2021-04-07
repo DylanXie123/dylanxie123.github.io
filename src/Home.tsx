@@ -7,7 +7,7 @@ export default function Home() {
       <AppBar>
         <Tabs>
           <Tab label="计算器" href="/calc"></Tab>
-          <Tab label="演示" href="/demo"></Tab>
+          <Tab label="电影" href="/movie"></Tab>
         </Tabs>
       </AppBar>
     </>
