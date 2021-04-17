@@ -3,7 +3,7 @@ import React, { useContext, useEffect } from 'react';
 import MovieAPI from './model/movie_api';
 import { movieModel, MovieModelContext } from './model/movie_model';
 
-function App() {
+function Movie() {
 
   useEffect(() => { movieModel.fetchDB() });
 
@@ -44,4 +44,4 @@ const UpdatingIndicator = observer(() => {
   }
 })
 
-export default App;
+export default Movie;
