@@ -1,15 +1,35 @@
-import { Button, createStyles, makeStyles, Theme } from "@material-ui/core";
-import { Grid } from "@material-ui/core";
+import { Button, createStyles, makeStyles } from "@material-ui/core";
 import { Backspace, Delete } from "@material-ui/icons";
 import React, { MouseEventHandler, useContext } from "react";
 import MathView from "react-math-view";
 import { ControllerContext } from "../model/controller";
 
-const useStyles = makeStyles((theme: Theme) =>
+const kKeyWidth = 64;
+
+const useStyles = makeStyles(() =>
   createStyles({
-    grid: {
+    keyboard: {
       position: "fixed",
       bottom: 0,
+      width: '100%',
+      zIndex: -1,
+    },
+    keyRow: {
+      maxWidth: Math.min(kKeyWidth * 5, window.innerWidth),
+      margin: 'auto',
+      alignContent: 'center',
+    },
+    mathKey: {
+      textTransform: 'lowercase',
+      minWidth: 32,
+      maxWidth: kKeyWidth,
+      width: window.innerWidth / 5,
+      boxSizing: 'border-box',
+      height: 36,
+      padding: 0,
+    },
+    keyContent: {
+      outline: 0,
     },
   }),
 );
@@ -18,38 +38,42 @@ export default function MathKeyboard() {
   const classes = useStyles();
 
   return (
-    <Grid className={classes.grid} container justify={'center'}>
-      <Grid container item justify={'center'} xs={8} >
+    <div className={classes.keyboard}>
+      <div>
         {ExtraKeyboard().map(
           (klist, index) => (
-            <Grid container item key={index} justify={'center'} >
+            <div className={classes.keyRow} key={index}>
               {klist.map(
                 (k, index) => (
-                  <Grid item key={index} xs={2}>
-                    <MathKey children={k.children} onclick={k.onclick} />
-                  </Grid>
+                  <MathKey
+                    children={k.children}
+                    onclick={k.onclick}
+                    key={index}
+                  />
                 )
               )}
-            </Grid>
+            </div>
           )
         )}
-      </Grid>
-      <Grid container item justify={'center'} xs={8}>
+      </div>
+      <div>
         {BasicKeyboard().map(
           (klist, index) => (
-            <Grid container item key={index} justify={'center'} >
+            <div className={classes.keyRow} key={index} >
               {klist.map(
                 (k, index) => (
-                  <Grid item key={index} xs={2}>
-                    <MathKey children={k.children} onclick={k.onclick} />
-                  </Grid>
+                  <MathKey
+                    children={k.children}
+                    onclick={k.onclick}
+                    key={index}
+                  />
                 )
               )}
-            </Grid>
+            </div>
           )
         )}
-      </Grid>
-    </Grid>
+      </div>
+    </div>
   );
 }
 
@@ -66,16 +90,15 @@ function ExtraKeyboard(): MathKeyProp[][] {
     onclick: () => controller.add('\\sqrt{#?}')
   })
 
-  row1.push({
-    children: '\\sin^{-1}',
-    onclick: () => controller.add('\\arcsin(')
-  })
-
   const row2: Array<MathKeyProp> = ['(', ')', 'e^{#?}', '{#?}^2'].map((v) => ({
     children: v,
     onclick: () => controller.add(v)
   }));
 
+  row2.push({
+    children: '\\sin^{-1}',
+    onclick: () => controller.add('\\arcsin(')
+  })
   return [row1, row2];
 }
 
@@ -136,18 +159,20 @@ interface MathKeyProp {
 }
 
 function MathKey(prop: MathKeyProp) {
+  const classes = useStyles();
+
   return (
     <Button
       variant='outlined'
       color="primary"
       onClick={prop.onclick}
-      style={{ textTransform: 'lowercase' }}
+      className={classes.mathKey}
     >
       {typeof prop.children === 'string' ?
         <MathView
+          className={classes.keyContent}
           value={prop.children}
           readOnly={true}
-          style={{ outline: 0, height: '24px', fontSize: '1em', position: 'relative', bottom: '7px' }}
         /> :
         prop.children}
     </Button>

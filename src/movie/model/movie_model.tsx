@@ -10,7 +10,8 @@ export default class MovieModel {
   @observable
   private updating: boolean = false;
 
-  private base = new Airtable({ apiKey: process.env.REACT_APP_AIRTABLE_KEY }).base(process.env.REACT_APP_AIRTABLE_BASE as string);
+  private base = new Airtable({ apiKey: process.env.REACT_APP_AIRTABLE_KEY })
+    .base(process.env.REACT_APP_AIRTABLE_BASE as string);
 
   private timeoutID!: NodeJS.Timeout;
 
@@ -18,7 +19,6 @@ export default class MovieModel {
     this.timeoutID = setTimeout(() => {
       this.fetchDB();
       this.startTimer();
-      console.log('hello');
     }, 500);
   }
 

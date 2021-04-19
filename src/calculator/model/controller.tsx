@@ -23,7 +23,7 @@ export default class Controller {
 
   private focus = () => {
     if (this.mfController && this.mfController.focus) {
-      this.mfController.focus!();
+      this.mfController.focus();
     }
   }
 }

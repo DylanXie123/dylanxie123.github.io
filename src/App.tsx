@@ -1,8 +1,10 @@
 import React from "react";
-import { Link, Route, Switch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import Calculator from "./calculator";
 import Home from "./home";
 import Movie from "./movie";
+import makeStyles from "@material-ui/core/styles/makeStyles";
+import createStyles from "@material-ui/core/styles/createStyles";
 
 export default function App() {
   return (
@@ -17,12 +19,28 @@ export default function App() {
   );
 }
 
+const useStyles = makeStyles(() =>
+  createStyles({
+    header: {
+      backgroundColor: '#1b1c1d',
+      padding: 8,
+    },
+    navtab: {
+      color: 'white',
+      fontSize: 20,
+      textDecoration: 'none',
+      padding: 8,
+    },
+  }),
+);
+
 function Header() {
+  const classes = useStyles();
   return (
-    <nav>
-      <Link to='/'>Home</Link>
-      <Link to='/calc'>Calc</Link>
-      <Link to='/movie'>Movie</Link>
+    <nav className={classes.header}>
+      <a className={classes.navtab} href='/'>Home</a>
+      <a className={classes.navtab} href='/calc'>Calc</a>
+      <a className={classes.navtab} href='/movie'>Movie</a>
     </nav>
   )
 }
