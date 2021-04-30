@@ -1,9 +1,15 @@
 import { observer } from 'mobx-react-lite';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import MovieAPI from './model/movie_api';
 import { movieModel, MovieModelContext } from './model/movie_model';
 
 function Movie() {
+
+  useEffect(() => {
+    return () => {
+      movieModel.unSubscribe();
+    };
+  })
 
   return (
     <MovieModelContext.Provider value={movieModel}>
