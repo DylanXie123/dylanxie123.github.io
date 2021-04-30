@@ -1,11 +1,9 @@
 import { observer } from 'mobx-react-lite';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import MovieAPI from './model/movie_api';
 import { movieModel, MovieModelContext } from './model/movie_model';
 
 function Movie() {
-
-  useEffect(() => { movieModel.fetchDB() });
 
   return (
     <MovieModelContext.Provider value={movieModel}>
@@ -15,12 +13,9 @@ function Movie() {
         MovieAPI.find('tt3896198')
           .then(v => console.log(v))
       }}>Fetch</button>
-      <button onClick={() => {
-        movieModel.clearTimer()
-      }}>Stop</button>
       <button onClick={async () => {
-        let movies = await MovieAPI.searchFullMovie('harry');
-        movieModel.create([movies[1]]);
+        let movie = await MovieAPI.find('tt3896198');
+        movieModel.create(movie);
       }}>Searh&Add</button>
     </MovieModelContext.Provider>
   );
@@ -30,7 +25,7 @@ const Board = observer(() => {
   const movieModel = useContext(MovieModelContext);
   return (
     <ul>
-      {movieModel.movies.map((movie) => (<li>{movie.title}</li>))}
+      {movieModel.movies.map((movie) => (<li key={movie.id}>{movie.title}</li>))}
     </ul>
   );
 })

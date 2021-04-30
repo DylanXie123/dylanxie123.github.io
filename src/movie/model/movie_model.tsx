@@ -1,111 +1,95 @@
 import { action, computed, observable } from "mobx";
-import Airtable from 'airtable';
 import React from "react";
-import Record from "airtable/lib/record";
+import LC from 'leanengine';
 
 export default class MovieModel {
   @observable
-  private model: Array<MovieDB> = [];
+  private model: Array<MoviewithRef> = [];
 
   @observable
   private updating: boolean = false;
 
-  private base = new Airtable({ apiKey: process.env.REACT_APP_AIRTABLE_KEY })
-    .base(process.env.REACT_APP_AIRTABLE_BASE as string);
-
-  private timeoutID!: NodeJS.Timeout;
-
-  private startTimer() {
-    this.timeoutID = setTimeout(() => {
-      this.fetchDB();
-      this.startTimer();
-    }, 500);
-  }
-
-  clearTimer() {
-    clearTimeout(this.timeoutID);
-  }
+  private liveQuery!: LC.LiveQuery<LC.Queriable>;
 
   constructor() {
-    this.startTimer();
-  }
-
-  private db2model(record: Record): MovieDB {
-    return {
-      id: record.get('ID') as string,
-      poster: record.get('Poster') as string,
-      year: record.get('Year') as number,
-      released: record.get('Released') as string,
-      runtime: record.get('Runtime') as number,
-      genre: record.get('Genre') as string,
-      director: record.get('Director') as string,
-      writer: record.get('Writer') as string,
-      actors: record.get('Actors') as string,
-      plot: record.get('Plot') as string,
-      language: record.get('Language') as string,
-      country: record.get('Country') as string,
-      awards: record.get('Awards') as string,
-      imdb: record.get('IMDB') as number,
-      douban: record.get('Douban') as number,
-      rottenTomatoes: record.get('Rotten Tomatoes') as number,
-      rating: record.get('Rating') as number,
-      title: record.get('Title') as string,
-      ref: record.getId(),
-    };
-  }
-
-  private model2db(movie: Movie) {
-    return {
-      "ID": movie.id,
-      "Poster": movie.poster,
-      "Year": movie.year,
-      "Released": movie.released,
-      "Runtime": movie.runtime,
-      "Genre": movie.genre,
-      "Director": movie.director,
-      "Writer": movie.writer,
-      "Actors": movie.actors,
-      "Plot": movie.plot,
-      "Language": movie.language,
-      "Country": movie.country,
-      "Awards": movie.awards,
-      "IMDB": movie.imdb,
-      "Douban": movie.douban,
-      "Rotten Tomatoes": movie.rottenTomatoes,
-      "Rating": movie.rating,
-      "Title": movie.title,
+    if (LC.applicationId === undefined || LC.applicationKey === undefined) {
+      LC.init({
+        appId: process.env.REACT_APP_LEAN_ID!,
+        appKey: process.env.REACT_APP_LEAN_KEY!,
+      });
     }
-  };
-
-  @action
-  fetchDB = () => {
-    let dbMovies: Array<MovieDB> = [];
-    this.base('Table 1').select().eachPage((records, fetchNextPage) => {
-      records.forEach(r => dbMovies.push(this.db2model(r)));
-      fetchNextPage();
-    }, () => {
-      this.model = dbMovies;
-      this.updating = false;
+    const query = new LC.Query('Movie');
+    query.subscribe().then(liveQuery => {
+      this.liveQuery = liveQuery;
+      liveQuery.on('create', (newItem) => {
+        if (newItem !== undefined) {
+          const movie = this.db2model(newItem);
+          this.updating = false;
+          this.model.push(movie);
+        }
+      });
     });
   }
 
+  unSubscribe = () => {
+    this.liveQuery.unsubscribe();
+  }
+
+  private db2model(record: LC.Queriable): MoviewithRef {
+    return {
+      id: record.get('id') as string,
+      poster: record.get('poster') as string,
+      year: record.get('year') as number,
+      released: record.get('released') as string,
+      runtime: record.get('runtime') as number,
+      genre: record.get('genre') as string,
+      director: record.get('director') as string,
+      writer: record.get('writer') as string,
+      actors: record.get('actors') as string,
+      plot: record.get('plot') as string,
+      language: record.get('language') as string,
+      country: record.get('country') as string,
+      awards: record.get('awards') as string,
+      imdb: record.get('imdbd') as number,
+      douban: record.get('douban') as number,
+      rottenTomatoes: record.get('rottenTomatoes') as number,
+      rating: record.get('rating') as number,
+      title: record.get('title') as string,
+      ref: record.get('objectId') as string,
+    };
+  }
+
   @action
-  create = (movies: Array<Movie>) => {
+  create = async (movie: Movie) => {
     this.updating = true;
-    this.base('Table 1').create(
-      movies.map(movie => ({ "fields": this.model2db(movie) })),
-      (err: any, records: Record[]) => {
-        if (err) {
-          console.log(err);
-          return;
-        }
-      })
+    const MovieDB = LC.Object.extend('Movie');
+    const movieDB = new MovieDB();
+    movieDB.set('id', movie.id);
+    movieDB.set('poster', movie.poster);
+    movieDB.set('year', movie.year);
+    movieDB.set('released', movie.released);
+    movieDB.set('runtime', movie.runtime);
+    movieDB.set('genre', movie.genre);
+    movieDB.set('director', movie.director);
+    movieDB.set('writer', movie.writer);
+    movieDB.set('actors', movie.actors);
+    movieDB.set('plot', movie.plot);
+    movieDB.set('language', movie.language);
+    movieDB.set('country', movie.country);
+    movieDB.set('awards', movie.awards);
+    movieDB.set('imdb', movie.imdb);
+    movieDB.set('douban', movie.douban);
+    movieDB.set('rottenTomatoes', movie.rottenTomatoes);
+    movieDB.set('rating', movie.rating);
+    movieDB.set('title', movie.title);
+    return movieDB.save();
   }
 
   @action
   delete = (id: string) => {
     this.updating = true;
-    this.base('Table 1').destroy(id);
+    const movieDB = LC.Object.createWithoutData('Movie', id);
+    movieDB.destroy();
   }
 
   @computed get movies() {
@@ -156,7 +140,7 @@ export interface Movie {
   title: string;
 }
 
-interface MovieDB extends Movie {
+interface MoviewithRef extends Movie {
   ref: string;
 }
 
