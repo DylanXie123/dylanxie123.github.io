@@ -16,11 +16,11 @@ function Movie() {
       <Board />
       <UpdatingIndicator />
       <button onClick={() => {
-        MovieAPI.find('tt3896198')
+        MovieAPI.find('tt11448076')
           .then(v => console.log(v))
       }}>Fetch</button>
       <button onClick={async () => {
-        let movie = await MovieAPI.find('tt3896198');
+        let movie = await MovieAPI.find('tt8946378');
         movieModel.create(movie);
       }}>Searh&Add</button>
     </MovieModelContext.Provider>

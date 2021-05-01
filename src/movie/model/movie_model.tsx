@@ -19,6 +19,9 @@ export default class MovieModel {
       });
     }
     const query = new LC.Query('Movie');
+    query.find().then(movies => {
+      this.model = movies.map(movie => this.db2model(movie))
+    });
     query.subscribe().then(liveQuery => {
       this.liveQuery = liveQuery;
       liveQuery.on('create', (newItem) => {
@@ -26,6 +29,23 @@ export default class MovieModel {
           const movie = this.db2model(newItem);
           this.updating = false;
           this.model.push(movie);
+        }
+      });
+      liveQuery.on('update', (item) => {
+        if (item !== undefined) {
+          const movieItem = this.db2model(item);
+          const index = this.model.indexOf(movieItem);
+          if (index > -1) {
+            this.model[index] = movieItem;
+          }
+        }
+      })
+      liveQuery.on('delete', (item) => {
+        if (item !== undefined) {
+          const index = this.model.indexOf(this.db2model(item));
+          if (index > -1) {
+            this.model.splice(index, 1);
+          }
         }
       });
     });

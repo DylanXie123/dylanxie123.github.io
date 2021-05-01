@@ -19,7 +19,7 @@ const MovieAPI = {
       country: data.Country as string,
       awards: data.Awards as string,
       imdb: parseFloat(data.imdbRating) as number,
-      rottenTomatoes: parseInt(data.Ratings[1].Value)/100 as number,
+      rottenTomatoes: parseInt(data.Ratings[1]?.Value) / 100 as number,
       title: data.Title as string,
     }
   },
