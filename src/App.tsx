@@ -1,20 +1,23 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { Route, Switch } from "react-router-dom";
-import Calculator from "./calculator";
-import Home from "./home";
-import Movie from "./movie";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import createStyles from "@material-ui/core/styles/createStyles";
+
+const Home = lazy(() => import('./home'));
+const Movie = lazy(() => import('./movie'));
+const Calculator = lazy(() => import('./calculator'));
 
 export default function App() {
   return (
     <>
       <Header />
-      <Switch>
-        <Route exact path="/" component={Home} />
-        <Route path="/calc" component={Calculator} />
-        <Route path="/movie" component={Movie} />
-      </Switch>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route path="/calc" component={Calculator} />
+          <Route path="/movie" component={Movie} />
+        </Switch>
+      </Suspense>
     </>
   );
 }
