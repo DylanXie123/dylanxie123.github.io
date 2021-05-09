@@ -1,9 +1,9 @@
-import { observer } from 'mobx-react-lite';
-import React, { useContext, useEffect } from 'react';
-import MovieAPI from './model/movie_api';
+import React, { useEffect } from 'react';
 import { movieModel, MovieModelContext } from './model/movie_model';
+import UpdatingIndicator from './components/UpdatingIndicator'
+import MovieBoard from './components/MovieBoard'
 
-function Movie() {
+function MovieApp() {
 
   useEffect(() => {
     return () => {
@@ -13,36 +13,10 @@ function Movie() {
 
   return (
     <MovieModelContext.Provider value={movieModel}>
-      <Board />
+      <MovieBoard />
       <UpdatingIndicator />
-      <button onClick={() => {
-        MovieAPI.find('tt11448076')
-          .then(v => console.log(v))
-      }}>Fetch</button>
-      <button onClick={async () => {
-        let movie = await MovieAPI.find('tt8946378');
-        movieModel.create(movie);
-      }}>Searh&Add</button>
     </MovieModelContext.Provider>
   );
 }
 
-const Board = observer(() => {
-  const movieModel = useContext(MovieModelContext);
-  return (
-    <ul>
-      {movieModel.movies.map((movie) => (<li key={movie.id}>{movie.title}</li>))}
-    </ul>
-  );
-})
-
-const UpdatingIndicator = observer(() => {
-  const movieModel = useContext(MovieModelContext);
-  if (movieModel.isUpdating) {
-    return <p>Updating...</p>
-  } else {
-    return null;
-  }
-})
-
-export default Movie;
+export default MovieApp;

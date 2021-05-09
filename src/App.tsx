@@ -4,7 +4,7 @@ import makeStyles from "@material-ui/core/styles/makeStyles";
 import createStyles from "@material-ui/core/styles/createStyles";
 
 const Home = lazy(() => import('./home'));
-const Movie = lazy(() => import('./movie'));
+const MovieApp = lazy(() => import('./movie'));
 const Calculator = lazy(() => import('./calculator'));
 
 export default function App() {
@@ -15,7 +15,7 @@ export default function App() {
         <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/calc" component={Calculator} />
-          <Route path="/movie" component={Movie} />
+          <Route path="/movie" component={MovieApp} />
         </Switch>
       </Suspense>
     </>
