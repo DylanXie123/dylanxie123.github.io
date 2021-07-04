@@ -14,8 +14,8 @@ export default class MovieModel {
   constructor() {
     if (LC.applicationId === undefined || LC.applicationKey === undefined) {
       LC.init({
-        appId: process.env.REACT_APP_LEAN_ID!,
-        appKey: process.env.REACT_APP_LEAN_KEY!,
+        appId: process.env.REACT_APP_LEAN_MOVIE_ID!,
+        appKey: process.env.REACT_APP_LEAN_MOVIE_KEY!,
       });
     }
     const query = new LC.Query('Movie');

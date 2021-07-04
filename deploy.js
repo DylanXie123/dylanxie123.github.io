@@ -4,6 +4,7 @@
 const routes = [
   'calc',
   'movie',
+  'airbox',
 ]
 
 // 给每个route都新建一个文件夹，把index.html拷贝进去
