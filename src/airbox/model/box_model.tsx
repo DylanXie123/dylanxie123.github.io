@@ -1,4 +1,4 @@
-import { action, computed, observable } from "mobx";
+import { action, computed, makeObservable, observable } from "mobx";
 import React from "react";
 import LC from 'leanengine';
 import Box from "./box";
@@ -10,6 +10,7 @@ export default class AirBoxModel {
   private liveQuery!: LC.LiveQuery<LC.Queriable>;
 
   constructor() {
+    makeObservable(this);
     if (LC.applicationId === undefined || LC.applicationKey === undefined) {
       LC.init({
         appId: process.env.REACT_APP_LEAN_AIRBOX_ID!,

@@ -1,4 +1,4 @@
-import { action, computed, observable } from "mobx";
+import { action, computed, makeObservable, observable } from "mobx";
 import React from "react";
 import nerdamer from 'nerdamer';
 const nerdamerAll = require('nerdamer/all');
@@ -15,20 +15,16 @@ export default class Expression {
   @observable
   latex: string = '';
 
-  @observable
-  private expression: nerdamer.Expression | undefined = undefined;
+  constructor() {
+    makeObservable(this);
+  }
 
   @action
   update = (rawLatex: string) => {
-    try {
-      if (rawLatex.search('matrix') >= 0) {
-        this.latex = this.handleMatrix(rawLatex);
-      } else {
-        this.latex = this.replaceInput(rawLatex);
-      }
-      this.expression = nerdamerAll.convertFromLaTeX(this.latex) as nerdamer.Expression;
-    } catch (error) {
-      this.expression = undefined;
+    if (rawLatex.search('matrix') >= 0) {
+      this.latex = this.handleMatrix(rawLatex);
+    } else {
+      this.latex = this.replaceInput(rawLatex);
     }
   }
 
@@ -46,6 +42,14 @@ export default class Expression {
     const rows = Array.from(Array(n).keys());
     let matrixExp = rows.map((v) => `[${matrixList.slice(v * n, (v + 1) * n).join()}]`).join();
     return `matrix(${matrixExp})`;
+  }
+
+  @computed get expression() {
+    try {
+      return nerdamerAll.convertFromLaTeX(this.latex) as nerdamer.Expression;
+    } catch (error) {
+      return undefined;
+    }
   }
 
   @computed get eval() {
