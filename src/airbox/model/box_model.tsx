@@ -23,10 +23,17 @@ export default class AirBoxModel {
     });
     query.subscribe().then(liveQuery => {
       this.liveQuery = liveQuery;
-      liveQuery.on('create', (newItem) => {
-        if (newItem !== undefined) {
-          const box = this.db2model(newItem);
+      liveQuery.on('create', (item) => {
+        if (item !== undefined) {
+          const box = this.db2model(item);
           this.models.push(box);
+        }
+      });
+      liveQuery.on('delete', (item) => {
+        if (item !== undefined) {
+          const box = this.db2model(item);
+          const index = this.models.indexOf(box);
+          this.models.splice(index, 1);
         }
       });
     });
