@@ -1,2 +1,0 @@
-(this["webpackJsonpgithub-pages"]=this["webpackJsonpgithub-pages"]||[]).push([[9],{569:function(t,e,n){"use strict";n.r(e),n.d(e,"default",(function(){return u}));n(0);var s=n(2);function u(){return Object(s.jsx)("p",{children:"Home"})}}}]);
-//# sourceMappingURL=9.03469269.chunk.js.map
