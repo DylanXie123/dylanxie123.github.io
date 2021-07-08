@@ -1,18 +1,16 @@
-export default class Box {
+export default interface Box extends BoxWithoutId {
   id: string;
+}
 
+export interface BoxWithoutId {
   content: string;
 
-  constructor({id, content}: {id: string, content: string}) {
-    this.id = id;
-    this.content = content;
-  }
-
+  boxType: BoxType;
 }
 
 export enum BoxType {
-  Text,
-  Image,
-  URL,
-  File,
+  Text = 'Text',
+  Image = 'Image',
+  URL = 'URL',
+  File = 'File',
 }

@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { BoxType } from "../model/box";
 import { AirBoxModelContext } from "../model/box_model";
 
 const AddBoxCard = () => {
@@ -7,13 +8,17 @@ const AddBoxCard = () => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    airBoxModel.create(content);
+    airBoxModel.create({
+      content: content,
+      boxType: BoxType.Text,
+    });
   }
+
 
   return (
     <div style={{ border: '1px solid' }}>
       <form onSubmit={handleSubmit}>
-        <input type='text' value={content} onChange={(event)=>{update(event.target.value)}}></input>
+        <input type='text' value={content} onChange={(event) => { update(event.target.value) }}></input>
         <input type='submit'></input>
       </form>
     </div>

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import AirBoxModel, { AirBoxModelContext } from './model/box_model';
 import BoxBoard from './components/BoxBoard';
-
+import UpdatingIndicator from './components/UpdatingIndicator';
 
 function AirBoxApp() {
 
@@ -11,13 +11,13 @@ function AirBoxApp() {
     airBoxModel.subscribe();
     return () => {
       airBoxModel.unSubscribe();
-      console.log('Here');
     };
   })
 
   return (
     <AirBoxModelContext.Provider value={airBoxModel}>
-      <BoxBoard/>
+      <BoxBoard />
+      <UpdatingIndicator />
     </AirBoxModelContext.Provider>
   );
 }
