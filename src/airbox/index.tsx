@@ -1,13 +1,17 @@
 import React, { useEffect } from 'react';
-import { airBoxModel, AirBoxModelContext } from './model/box_model';
+import AirBoxModel, { AirBoxModelContext } from './model/box_model';
 import BoxBoard from './components/BoxBoard';
 
 
 function AirBoxApp() {
 
+  const airBoxModel = new AirBoxModel();
+
   useEffect(() => {
+    airBoxModel.subscribe();
     return () => {
       airBoxModel.unSubscribe();
+      console.log('Here');
     };
   })
 

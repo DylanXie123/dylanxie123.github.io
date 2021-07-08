@@ -1,11 +1,14 @@
 import React, { useEffect } from 'react';
-import { movieModel, MovieModelContext } from './model/movie_model';
+import MovieModel, { MovieModelContext } from './model/movie_model';
 import UpdatingIndicator from './components/UpdatingIndicator'
 import MovieBoard from './components/MovieBoard'
 
 function MovieApp() {
 
+  const movieModel = new MovieModel();
+
   useEffect(() => {
+    movieModel.subscribe();
     return () => {
       movieModel.unSubscribe();
     };

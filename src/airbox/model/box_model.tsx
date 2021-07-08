@@ -17,30 +17,27 @@ export default class AirBoxModel {
         appKey: process.env.REACT_APP_LEAN_AIRBOX_KEY!,
       });
     }
+  }
+
+  subscribe = (init = true)  => {
     const query = new LC.Query('AirBox');
-    query.find().then(boxes => {
-      this.models = boxes.map(items => this.db2model(items))
-    });
-    query.subscribe().then(liveQuery => {
-      this.liveQuery = liveQuery;
-      liveQuery.on('create', (item) => {
-        if (item !== undefined) {
-          const box = this.db2model(item);
-          this.models.push(box);
-        }
+    if (init) {
+      query.find().then(boxes => {
+        this.models = boxes.map(items => this.db2model(items))
       });
-      liveQuery.on('delete', (item) => {
-        if (item !== undefined) {
-          const box = this.db2model(item);
-          const index = this.models.indexOf(box);
-          this.models.splice(index, 1);
-        }
-      });
-    });
+    }
+    query.subscribe().then((liveQuery) => {
+       liveQuery.on('create', (newItem) => {
+         if (newItem !== undefined) {
+           const box = this.db2model(newItem);
+           this.models.push(box);
+         }
+       });
+     });
   }
 
   unSubscribe = () => {
-    this.liveQuery.unsubscribe();
+    this.liveQuery?.unsubscribe();
   }
 
   private db2model(record: LC.Queriable): Box {
@@ -70,5 +67,5 @@ export default class AirBoxModel {
 
 }
 
-export const airBoxModel = new AirBoxModel();
+const airBoxModel = new AirBoxModel();
 export const AirBoxModelContext = React.createContext<AirBoxModel>(airBoxModel);

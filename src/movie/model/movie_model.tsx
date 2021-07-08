@@ -19,10 +19,15 @@ export default class MovieModel {
         appKey: process.env.REACT_APP_LEAN_MOVIE_KEY!,
       });
     }
+  }
+
+  subscribe = (init = true) => {
     const query = new LC.Query('Movie');
-    query.find().then(movies => {
-      this.model = movies.map(movie => this.db2model(movie))
-    });
+    if (init) {
+      query.find().then(movies => {
+        this.model = movies.map(movie => this.db2model(movie))
+      });
+    }
     query.subscribe().then(liveQuery => {
       this.liveQuery = liveQuery;
       liveQuery.on('create', (newItem) => {
@@ -53,7 +58,7 @@ export default class MovieModel {
   }
 
   unSubscribe = () => {
-    this.liveQuery.unsubscribe();
+    this.liveQuery?.unsubscribe();
   }
 
   private db2model(record: LC.Queriable): MoviewithRef {
@@ -165,5 +170,5 @@ interface MoviewithRef extends Movie {
   ref: string;
 }
 
-export const movieModel = new MovieModel();
+const movieModel = new MovieModel();
 export const MovieModelContext = React.createContext<MovieModel>(movieModel);

@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from "react";
-import { Route, Switch } from "react-router-dom";
+import { NavLink, Route, Switch } from "react-router-dom";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import createStyles from "@material-ui/core/styles/createStyles";
 
@@ -43,10 +43,10 @@ function Header() {
   const classes = useStyles();
   return (
     <nav className={classes.header}>
-      <a className={classes.navtab} href='/'>Home</a>
-      <a className={classes.navtab} href='/calc'>Calc</a>
-      <a className={classes.navtab} href='/movie'>Movie</a>
-      <a className={classes.navtab} href='/airbox'>AirBox</a>
+      <NavLink className={classes.navtab} to='/'>Home</NavLink>
+      <NavLink className={classes.navtab} to='/calc'>Calc</NavLink>
+      <NavLink className={classes.navtab} to='/movie'>Movie</NavLink>
+      <NavLink className={classes.navtab} to='/airbox'>AirBox</NavLink>
     </nav>
   )
 }
