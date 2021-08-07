@@ -132,5 +132,5 @@ const calc2dis = new Map<RegExp, string>([
   [RegExp('\\\\cdot', 'g'), '\\times'],
 ]);
 
-export const expStore = new Expression();
+const expStore = new Expression();
 export const ExpContext = React.createContext<Expression>(expStore);

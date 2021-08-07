@@ -12,13 +12,21 @@ export default class Controller {
   add = (expression: string) => this.mfController.insert(expression, { focus: true, format: "latex" });
 
   backspace = () => {
-    this.mfController.executeCommand("deletePreviousChar");
+    this.mfController.executeCommand("deleteBackward");
     this.focus();
   }
 
   clear = () => {
     this.mfController.executeCommand("deleteAll");
     this.focus();
+  }
+
+  move = (direction: Direction) => {
+    if (direction === "forward") {
+      this.mfController.executeCommand("moveToNextChar");
+    } else {
+      this.mfController.executeCommand("moveToPreviousChar");
+    }
   }
 
   private focus = () => {
@@ -28,5 +36,7 @@ export default class Controller {
   }
 }
 
-export const controller = new Controller();
+type Direction = 'forward' | 'backword';
+
+const controller = new Controller();
 export const ControllerContext = React.createContext<Controller>(controller);

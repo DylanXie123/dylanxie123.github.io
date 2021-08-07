@@ -82,7 +82,10 @@ function ExtraKeyboard(): MathKeyProp[][] {
 
   const row1: Array<MathKeyProp> = ['\\sin', '\\cos', '\\tan', '\\log'].map((v) => ({
     children: v,
-    onclick: () => controller.add(v + '(#?)')
+    onclick: () => {
+      controller.add(v + '(#?)');
+      controller.move("backword");
+    }
   }));
 
   row1.push({
@@ -97,7 +100,10 @@ function ExtraKeyboard(): MathKeyProp[][] {
 
   row2.push({
     children: '\\sin^{-1}',
-    onclick: () => controller.add('\\arcsin(')
+    onclick: () => {
+      controller.add('\\arcsin(#?)');
+      controller.move("backword");
+    }
   })
   return [row1, row2];
 }
