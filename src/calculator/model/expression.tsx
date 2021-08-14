@@ -1,7 +1,8 @@
 import { action, computed, makeObservable, observable } from "mobx";
 import React from "react";
 import nerdamer from 'nerdamer';
-const nerdamerAll = require('nerdamer/all');
+import AlgebraLatex from 'algebra-latex'
+require('nerdamer/all');
 
 export enum Mode {
   Eval = 0,
@@ -15,38 +16,20 @@ export default class Expression {
   @observable
   latex: string = '';
 
+  private parser = new AlgebraLatex();
+
   constructor() {
     makeObservable(this);
   }
 
   @action
   update = (rawLatex: string) => {
-    if (rawLatex.search('matrix') >= 0) {
-      this.latex = this.handleMatrix(rawLatex);
-    } else {
-      this.latex = this.replaceInput(rawLatex);
-    }
-  }
-
-  private replaceInput(latex: string) {
-    dis2calc.forEach((v, k) => latex = latex.replace(k, v));
-    return latex;
-  }
-
-  private handleMatrix(latex: string) {
-    latex = this.replaceInput(latex);
-    let matrixList = latex.split(/\\\\|&/);
-    matrixList[0] = matrixList[0].slice(15);
-    matrixList[matrixList.length - 1] = matrixList[matrixList.length - 1].slice(0, matrixList[matrixList.length - 1].length - 13);
-    const n = Math.sqrt(matrixList.length);
-    const rows = Array.from(Array(n).keys());
-    let matrixExp = rows.map((v) => `[${matrixList.slice(v * n, (v + 1) * n).join()}]`).join();
-    return `matrix(${matrixExp})`;
+    this.latex = rawLatex;
   }
 
   @computed get expression() {
     try {
-      return nerdamerAll.convertFromLaTeX(this.latex) as nerdamer.Expression;
+      return this.parser.parseLatex(this.latex).toNerdamer() as nerdamer.Expression;
     } catch (error) {
       return undefined;
     }
@@ -54,7 +37,7 @@ export default class Expression {
 
   @computed get eval() {
     try {
-      return this.expression?.evaluate().text();
+      return this.expression!.evaluate().text();
     } catch (error) {
       return undefined;
     }
@@ -91,7 +74,7 @@ export default class Expression {
 
   @computed get solve() {
     try {
-      return this.expression?.solveFor('x').toTeX();
+      return this.expression!.solveFor('x').toTeX();
     } catch (error) {
       return undefined;
     }
@@ -114,19 +97,6 @@ export default class Expression {
   }
 
 }
-
-// TODO: Need a better way to handle display and calc conversion
-// use regexp now
-const dis2calc = new Map<RegExp, string>([
-  [RegExp('\\s+', 'g'), ''], //sin(2)pi
-  [RegExp('\\?', 'g'), ')'],
-  [RegExp('\\\\times|\\\\cdot', 'g'), '*'],
-  [RegExp('\\\\div', 'g'), '/'],
-  [RegExp('\\\\arcsin', 'g'), '\\asin'],
-  [RegExp('\\\\arccos', 'g'), '\\acos'],
-  [RegExp('\\\\arctan', 'g'), '\\atan'],
-  [RegExp('\\\\sqrt\\[\\]', 'g'), '\\sqrt'],
-]);
 
 const calc2dis = new Map<RegExp, string>([
   [RegExp('\\\\cdot', 'g'), '\\times'],

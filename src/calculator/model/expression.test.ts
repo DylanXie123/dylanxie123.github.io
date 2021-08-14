@@ -1,11 +1,12 @@
-import { expStore } from './expression';
+import Expression from './expression';
+const expStore = new Expression();
 
 describe('parser test', () => {
 
   test('input', () => {
     const inputTestSample: Map<string, number> = new Map([
-      ['1\\times2', 2],
-      ['1\\div2', 0.5],
+      ['1\\times 2', 2],
+      ['1/2', 0.5],
       ['\\arcsin(1)', Math.PI / 2],
     ]);
     inputTestSample.forEach((v, k) => {
