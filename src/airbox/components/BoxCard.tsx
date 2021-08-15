@@ -12,6 +12,7 @@ const BoxCard = (prop: BoxCardProp) => {
     <div style={{ border: '1px solid' }}>
       {UrlBox(prop.box.content)}
       <button onClick={() => { airBoxModel.delete(prop.box.id) }}>Delete</button>
+      <button onClick={() => { navigator.clipboard.writeText(prop.box.content) }}>Copy</button>
     </div>
   );
 }
@@ -52,7 +53,7 @@ const UrlBox = (content: string) => {
       <a key={`a-${index}`} href={link} target={'_blank'} rel={'noreferrer'}>{link}</a>,
       <span key={`textSpan-${index}`}>{textContent}</span>
     );
-    
+
   }
   return elements
 }
