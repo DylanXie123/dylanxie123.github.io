@@ -8,9 +8,9 @@ export default class AirBoxModel {
   private models: Array<Box> = [];
 
   @observable
-  private update = false;
+  private loading = true;
 
-  private liveQuery!: LC.LiveQuery<LC.Queriable>;
+  private liveQuery: LC.LiveQuery<LC.Queriable> | undefined;
 
   constructor() {
     makeObservable(this);
@@ -20,17 +20,16 @@ export default class AirBoxModel {
         appKey: process.env.REACT_APP_LEAN_AIRBOX_KEY!,
       });
     }
+    this.subscribe();
   }
 
-  subscribe = (init = true) => {
+  subscribe = () => {
     const query = new LC.Query('AirBox');
-    if (init) {
-      action(() => this.update = true);
-      query.find().then(boxes =>
-        this.replace(boxes.map(items => this.db2model(items)))
-      );
-    }
+    query.find().then(boxes =>
+      this.replace(boxes.map(items => this.db2model(items)))
+    );
     query.subscribe().then(liveQuery => {
+      this.liveQuery = liveQuery;
       liveQuery.on('create', item => {
         if (item !== undefined) {
           const box = this.db2model(item);
@@ -52,13 +51,13 @@ export default class AirBoxModel {
   @action
   private replace = (items: Array<Box>) => {
     this.models = items;
-    this.update = false;
+    this.loading = false;
   }
 
   @action
   private insert = (item: Box) => {
     this.models.push(item);
-    this.update = false;
+    this.loading = false;
   }
 
   @action
@@ -67,7 +66,7 @@ export default class AirBoxModel {
     if (index > -1) {
       this.models.splice(index, 1);
     }
-    this.update = false;
+    this.loading = false;
   }
 
   private db2model(record: LC.Queriable): Box {
@@ -79,7 +78,7 @@ export default class AirBoxModel {
   }
 
   create = (box: BoxWithoutId) => {
-    action(() => this.update = true);
+    action(() => this.loading = true);
     const AirBoxDB = LC.Object.extend('AirBox');
     const airBoxDB = new AirBoxDB();
     airBoxDB.set('content', box.content);
@@ -88,7 +87,7 @@ export default class AirBoxModel {
   }
 
   delete = (id: string) => {
-    action(() => this.update = true);
+    action(() => this.loading = true);
     const airBoxDB = LC.Object.createWithoutData('AirBox', id);
     airBoxDB.destroy();
   }
@@ -97,8 +96,8 @@ export default class AirBoxModel {
     return this.models;
   }
 
-  @computed get isUpdating() {
-    return this.update;
+  @computed get isLoading() {
+    return this.loading;
   }
 
 }
