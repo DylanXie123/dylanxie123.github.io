@@ -9,7 +9,7 @@ interface BoxCardProp {
 const BoxCard = (prop: BoxCardProp) => {
   const airBoxModel = useContext(AirBoxModelContext);
   return (
-    <div style={{ border: '1px solid' }}>
+    <div style={{ flex: '1 200px', boxSizing: 'border-box', maxWidth: '100%', border: '1px solid', overflowWrap: 'break-word' }}>
       {UrlBox(prop.box.content)}
       <button onClick={() => { airBoxModel.delete(prop.box.id) }}>Delete</button>
       <button onClick={() => { navigator.clipboard.writeText(prop.box.content) }}>Copy</button>

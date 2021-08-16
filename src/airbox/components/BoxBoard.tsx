@@ -7,18 +7,17 @@ import AddBoxCard from './AddBoxCard';
 const BoxBoard = observer(() => {
   const airBoxModel = useContext(AirBoxModelContext);
 
-  const grids = airBoxModel.boxes.map(box => (
-    <li key={box.id}>
-      <BoxCard box={box} />
-    </li>
+  const boxes = airBoxModel.boxes.map(box => (
+    <BoxCard key={box.id} box={box} />
   ));
 
-  grids.push(<AddBoxCard key='add'/>);
-
   return (
-    <ul style={{padding: 10}}>
-      {grids}
-    </ul>
+    <>
+      <div style={{ display: 'flex', flexWrap: 'wrap', padding: '10px' }}>
+        {boxes}
+      </div>
+      <AddBoxCard />
+    </>
   );
 })
 
