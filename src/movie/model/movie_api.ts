@@ -1,14 +1,5 @@
 import { Movie } from "./movie_model";
-import CryptoJS from 'crypto-js';
-
-const decrypt = (cipher: string | undefined) => {
-  const key = localStorage.getItem('private key');
-  if (!key || key.length === 0 || !cipher || cipher.length === 0) {
-    throw Error(`decrypt ${cipher} failed`);
-  } else {
-    return CryptoJS.AES.decrypt(cipher, key).toString(CryptoJS.enc.Utf8)
-  }
-}
+import { decrypt } from "../../login/auth";
 
 const MovieAPI = {
   apiKey: decrypt(process.env.REACT_APP_OMDb_API),

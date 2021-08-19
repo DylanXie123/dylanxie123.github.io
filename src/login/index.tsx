@@ -1,18 +1,21 @@
-import React, { useContext, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
-import { AuthProvider } from './AuthModel'
+import React, { useState } from 'react';
+import { Redirect, useHistory, useLocation } from 'react-router-dom';
+import { haveKey, setKey } from './auth';
 
 const Login = () => {
   const [key, update] = useState('');
   const history = useHistory();
   const location = useLocation<string>();
-  const auth = useContext(AuthProvider);
 
   const from = location.state || "/";
 
+  if (haveKey()) {
+    return <Redirect to={from} />
+  }
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const succeed = auth.login(key);
+    const succeed = setKey(key);
     if (succeed) {
       history.replace(from);
     } else {
