@@ -1,6 +1,7 @@
 import { action, computed, makeObservable, observable } from "mobx";
 import React from "react";
 import LC from 'leanengine';
+import CryptoJS from 'crypto-js';
 
 export default class MovieModel {
   @observable
@@ -15,9 +16,18 @@ export default class MovieModel {
     makeObservable(this);
     if (LC.applicationId === undefined || LC.applicationKey === undefined) {
       LC.init({
-        appId: process.env.REACT_APP_LEAN_MOVIE_ID!,
-        appKey: process.env.REACT_APP_LEAN_MOVIE_KEY!,
+        appId: this.decrypt(process.env.REACT_APP_LEAN_MOVIE_ID),
+        appKey: this.decrypt(process.env.REACT_APP_LEAN_MOVIE_KEY),
       });
+    }
+  }
+
+  private decrypt = (cipher: string | undefined) => {
+    const key = localStorage.getItem('private key');
+    if (!key || key.length === 0 || !cipher || cipher.length === 0) {
+      throw Error(`decrypt ${cipher} failed`);
+    } else {
+      return CryptoJS.AES.decrypt(cipher, key).toString(CryptoJS.enc.Utf8)
     }
   }
 

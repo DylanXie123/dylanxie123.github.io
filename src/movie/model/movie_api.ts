@@ -1,8 +1,19 @@
 import { Movie } from "./movie_model";
+import CryptoJS from 'crypto-js';
+
+const decrypt = (cipher: string | undefined) => {
+  const key = localStorage.getItem('private key');
+  if (!key || key.length === 0 || !cipher || cipher.length === 0) {
+    throw Error(`decrypt ${cipher} failed`);
+  } else {
+    return CryptoJS.AES.decrypt(cipher, key).toString(CryptoJS.enc.Utf8)
+  }
+}
 
 const MovieAPI = {
+  apiKey: decrypt(process.env.REACT_APP_OMDb_API),
   find: async (id: string): Promise<Movie> => {
-    let response = await fetch(`http://www.omdbapi.com/?i=${id}&apikey=${process.env.REACT_APP_OMDb_API}`)
+    let response = await fetch(`http://www.omdbapi.com/?i=${id}&apikey=${MovieAPI.apiKey}`)
     let data = await response.json();
     return {
       id: data.imdbID as string,
@@ -24,7 +35,7 @@ const MovieAPI = {
     }
   },
   search: async (title: string): Promise<Array<SearchedMovie>> => {
-    let response = await fetch(`http://www.omdbapi.com/?s=${title}&apikey=${process.env.REACT_APP_OMDb_API}`)
+    let response = await fetch(`http://www.omdbapi.com/?s=${title}&apikey=${MovieAPI.apiKey}`)
     let data = await response.json();
     return (data.Search as Array<any>).map((d) => ({
       title: d.Title as string,
