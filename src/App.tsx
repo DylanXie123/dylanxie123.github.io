@@ -16,11 +16,11 @@ export default function App() {
       <Header />
       <Suspense fallback={<div>Loading...</div>}>
         <Switch>
-          <Route exact path="/" component={Home} />
-          <Route path="/login" component={Login} />
-          <Route path="/calc" component={Calculator} />
-          <PrivateRoute path="/movie" component={MovieApp} />
-          <PrivateRoute path="/airbox" component={AirBoxApp} />
+          <Route exact path="/" render={() => <Home />} />
+          <Route path="/login" render={() => <Login />} />
+          <Route path="/calc" render={() => <Calculator />} />
+          <RedirectRoute path="/movie" defaultComponent={MovieApp} />
+          <RedirectRoute path="/airbox" defaultComponent={AirBoxApp} />
         </Switch>
       </Suspense>
     </>
@@ -54,16 +54,21 @@ function Header() {
   )
 }
 
-interface PrivateRouteProp {
-  path: string,
-  component: React.ComponentType,
+interface RedirectRouteProp {
+  defaultComponent: React.ComponentType
 }
 
-function PrivateRoute(props: PrivateRouteProp) {
+const RedirectRoute = (props: React.ComponentProps<typeof Route> & RedirectRouteProp) => {
   const location = useLocation();
-  if (haveKey()) {
-    return (<Route path={props.path} component={props.component} />);
-  } else {
-    return (<Route path={props.path} render={() => <Redirect to={{ pathname: "/login", state: location.pathname }} />} />);
-  }
+
+  return (
+    <Route
+      {...props}
+      path={props.path}
+      render={() => {
+        return haveKey() ? <props.defaultComponent /> :
+          <Redirect to={{ pathname: "/login", state: location.pathname }} />
+      }}
+    />
+  );
 }

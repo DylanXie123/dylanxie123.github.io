@@ -11,15 +11,22 @@ const AddBoxCard = () => {
     airBoxModel.create({
       content: content,
       boxType: BoxType.Text,
-    });
+    }).catch(() => {alert('Fail to add')});
+    update('');
   }
 
 
   return (
     <div style={{ border: '1px solid' }}>
       <form onSubmit={handleSubmit}>
-        <input type='text' value={content} onChange={(event) => { update(event.target.value) }}></input>
-        <input type='submit'></input>
+        <input
+          type='text'
+          placeholder={'Just type something😎'}
+          required
+          value={content}
+          onChange={(e) => update(e.target.value)}
+        />
+        <input type='submit' />
       </form>
     </div>
   );

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Redirect, useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { haveKey, setKey } from './auth';
 
 const Login = () => {
@@ -10,7 +10,8 @@ const Login = () => {
   const from = location.state || "/";
 
   if (haveKey()) {
-    return <Redirect to={from} />
+    history.goBack();
+    return null;
   }
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -27,7 +28,14 @@ const Login = () => {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <input type='password' placeholder={'Enter password'} autoComplete={'current-password'} required value={key} onChange={e => update(e.target.value)} />
+        <input
+          type='password'
+          placeholder={'Enter password'}
+          autoComplete={'current-password'}
+          required
+          value={key}
+          onChange={e => update(e.target.value)}
+        />
         <input type='submit' />
       </form>
     </div>
