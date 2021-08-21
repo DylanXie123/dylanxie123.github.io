@@ -22,7 +22,7 @@
     "clipboardRead",
     "clipboardWrite"
   ],
-  "start_url": ".",
+  "start_url": "./calc",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff"
