@@ -27,6 +27,7 @@ export default class Controller {
     } else {
       this.mfController.executeCommand("moveToPreviousChar");
     }
+    this.focus();
   }
 
   private focus = () => {

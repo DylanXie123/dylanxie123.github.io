@@ -44,32 +44,61 @@ export default function MathKeyboard() {
 function ExtraKeyboard(): MathKeyProp[] {
   const controller = useContext(ControllerContext);
 
-  const row1: Array<MathKeyProp> = ['\\sin', '\\cos', '\\tan', '\\log'].map((v) => ({
+  const row1: Array<MathKeyProp> = ['\\sin', '\\cos', '\\tan', '\\log', '\\sqrt'].map((v) => ({
     children: v,
     onclick: () => {
-      controller.add(v + '(#?)');
-      controller.move("backword");
+      controller.add(v + '({#?})');
     }
   }));
 
-  row1.push({
-    children: '\\sqrt{#?}',
-    onclick: () => controller.add('\\sqrt{#?}')
-  })
+  const row2Trig: Array<Record<"children" | "command", string>> = [
+    {
+      children: '\\sin^{-1}',
+      command: '\\arcsin({#?})'
+    },
+    {
+      children: '\\cos^{-1}',
+      command: '\\arccos({#?})'
+    },
+    {
+      children: '\\tan^{-1}',
+      command: '\\arctan({#?})'
+    },
+    {
+      children: 'e^{#?}',
+      command: 'e^{#?}'
+    },
+    {
+      children: '{#?}^2',
+      command: '{#?}^2'
+    },
+  ];
 
-  const row2: Array<MathKeyProp> = ['(', ')', 'e^{#?}', '{#?}^2'].map((v) => ({
-    children: v,
-    onclick: () => controller.add(v)
+  const row2: Array<MathKeyProp> = row2Trig.map((v) => ({
+    children: v.children,
+    onclick: () => controller.add(v.command)
   }));
 
-  row2.push({
-    children: '\\sin^{-1}',
+  const row3: Array<MathKeyProp> = ['\\frac{#?}{#?}', '(', ')'].map((v) => ({
+    children: v,
     onclick: () => {
-      controller.add('\\arcsin(#?)');
+      controller.add(v);
+    }
+  }));
+
+  row3.push({
+    children: '\\leftarrow',
+    onclick: () => {
       controller.move("backword");
     }
   })
-  return [...row1, ...row2];
+  row3.push({
+    children: '\\rightarrow',
+    onclick: () => {
+      controller.move("forward");
+    }
+  })
+  return [...row1, ...row2, ...row3];
 }
 
 function BasicKeyboard(): MathKeyProp[] {
