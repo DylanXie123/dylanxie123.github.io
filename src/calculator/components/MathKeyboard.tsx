@@ -1,8 +1,8 @@
-import { Button } from "@material-ui/core";
-import { Backspace, Delete } from "@material-ui/icons";
 import React, { MouseEventHandler, useContext } from "react";
 import MathView from "react-math-view";
 import { ControllerContext } from "../model/controller";
+import deleteIcon from '../icons/delete.svg';
+import backIcon from '../icons/backspace.svg';
 
 const kKeyWidth = 64;
 const kKeyHeight = 36;
@@ -11,10 +11,10 @@ export default function MathKeyboard() {
 
   return (
     <div style={{ position: 'fixed', bottom: 0, width: '100%', zIndex: -1 }}>
-      <div style={{ display: 'grid', gridTemplateColumns: `repeat(5, ${kKeyWidth}px)`, justifyContent: 'center' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: `repeat(5, ${kKeyWidth}px)`, justifyContent: 'center', gap: 2 }}>
         {ExtraKeyboard().map(
           (key, index) => (
-            <div key={index}>
+            <div key={'extra' + index}>
               <MathKey
                 children={key.children}
                 onclick={key.onclick}
@@ -23,11 +23,9 @@ export default function MathKeyboard() {
             </div>
           )
         )}
-      </div>
-      <div style={{ display: 'grid', gridTemplateColumns: `repeat(5, ${kKeyWidth}px)`, justifyContent: 'center' }}>
         {BasicKeyboard().map(
           (key, index) => (
-            <div key={index} >
+            <div key={'basic' + index} >
               <MathKey
                 children={key.children}
                 onclick={key.onclick}
@@ -110,12 +108,12 @@ function BasicKeyboard(): MathKeyProp[] {
   }));
 
   row1.push({
-    children: <Delete />,
+    children: <img src={deleteIcon} alt="del" style={{ width: 24 }} />,
     onclick: () => controller.clear()
   })
 
   row1.push({
-    children: <Backspace />,
+    children: <img src={backIcon} alt="backspace" style={{ width: 24 }} />,
     onclick: () => controller.backspace()
   })
 
@@ -160,11 +158,14 @@ interface MathKeyProp {
 function MathKey(prop: MathKeyProp) {
 
   return (
-    <Button
-      variant='outlined'
-      color="primary"
+    <button
       onClick={prop.onclick}
-      style={{ textTransform: 'lowercase', height: kKeyHeight, width: kKeyWidth }}
+      style={{
+        textTransform: 'lowercase',
+        height: kKeyHeight,
+        width: kKeyWidth,
+        background: 'none',
+      }}
     >
       {typeof prop.children === 'string' ?
         <MathView
@@ -172,6 +173,6 @@ function MathKey(prop: MathKeyProp) {
           readOnly={true}
         /> :
         prop.children}
-    </Button>
+    </button>
   );
 }

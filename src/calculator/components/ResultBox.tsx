@@ -3,7 +3,6 @@ import React, { useContext } from "react";
 import { ExpContext, Mode } from "../model/expression";
 import MathView from 'react-math-view';
 import { ControllerContext } from "../model/controller";
-import { Button } from "@material-ui/core";
 
 const ResultBox = observer(() => {
   const exp = useContext(ExpContext);
@@ -73,17 +72,15 @@ function InfoBox(prop: InfoBoxProp) {
         style={{ outline: 0 }}
       >
       </MathView>
-      <Button
+      <button
         hidden={prop.hideAdd}
         style={{ height: '50%', marginLeft: '20pt' }}
-        color='primary'
-        variant='contained'
         onClick={() => {
           controller.clear();
           controller.add(prop.content.substr(1));
         }}>
         +
-      </Button>
+      </button>
     </div>
   );
 }

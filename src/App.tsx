@@ -1,7 +1,5 @@
 import React, { lazy, Suspense } from "react";
 import { NavLink, Redirect, Route, Switch, useLocation } from "react-router-dom";
-import makeStyles from "@material-ui/core/styles/makeStyles";
-import createStyles from "@material-ui/core/styles/createStyles";
 import { haveKey } from "./login/auth";
 
 const Home = lazy(() => import('./home'));
@@ -27,29 +25,19 @@ export default function App() {
   );
 }
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    header: {
-      backgroundColor: '#1b1c1d',
-      padding: 8,
-    },
-    navtab: {
-      color: 'white',
-      fontSize: 20,
-      textDecoration: 'none',
-      padding: 8,
-    },
-  }),
-);
-
 function Header() {
-  const classes = useStyles();
+  const linkStyle: React.CSSProperties = {
+    color: 'white',
+    fontSize: 20,
+    textDecoration: 'none',
+    padding: 8,
+  };
   return (
-    <nav className={classes.header}>
-      <NavLink className={classes.navtab} to='/'>Home</NavLink>
-      <NavLink className={classes.navtab} to='/calc'>Calc</NavLink>
-      <NavLink className={classes.navtab} to='/movie'>Movie</NavLink>
-      <NavLink className={classes.navtab} to='/airbox'>AirBox</NavLink>
+    <nav style={{ backgroundColor: '#1b1c1d', padding: 8 }}>
+      <NavLink style={linkStyle} to='/'>Home</NavLink>
+      <NavLink style={linkStyle} to='/calc'>Calc</NavLink>
+      <NavLink style={linkStyle} to='/movie'>Movie</NavLink>
+      <NavLink style={linkStyle} to='/airbox'>AirBox</NavLink>
     </nav>
   )
 }
