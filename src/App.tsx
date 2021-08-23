@@ -1,12 +1,11 @@
-import React, { lazy, Suspense } from "react";
+import React, { Suspense } from "react";
 import { NavLink, Redirect, Route, Switch, useLocation } from "react-router-dom";
 import { haveKey } from "./login/auth";
-
-const Home = lazy(() => import('./home'));
-const MovieApp = lazy(() => import('./movie'));
-const Calculator = lazy(() => import('./calculator'));
-const AirBoxApp = lazy(() => import('./airbox'));
-const Login = lazy(() => import('./login'));
+import Home from './home';
+import Calculator from './calculator';
+import Movie from './movie';
+import AirBox from './airbox';
+import Login from './login';
 
 export default function App() {
   return (
@@ -17,8 +16,8 @@ export default function App() {
           <Route exact path="/" render={() => <Home />} />
           <Route path="/login" render={() => <Login />} />
           <Route path="/calc" render={() => <Calculator />} />
-          <RedirectRoute path="/movie" defaultComponent={MovieApp} />
-          <RedirectRoute path="/airbox" defaultComponent={AirBoxApp} />
+          <RedirectRoute path="/movie" defaultComponent={Movie} />
+          <RedirectRoute path="/airbox" defaultComponent={AirBox} />
         </Switch>
       </Suspense>
     </>
