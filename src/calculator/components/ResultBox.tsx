@@ -70,8 +70,8 @@ function InfoBox(prop: InfoBoxProp) {
         value={prop.content}
         readOnly={true}
         style={{ outline: 0 }}
-      >
-      </MathView>
+        fontsDirectory={'../assets/fonts'}
+      />
       <button
         hidden={prop.hideAdd}
         style={{ height: '50%', marginLeft: '20pt' }}

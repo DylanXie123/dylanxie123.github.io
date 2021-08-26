@@ -1,8 +1,8 @@
 import React, { MouseEventHandler, useContext } from "react";
-import MathView from "react-math-view";
 import { ControllerContext } from "../model/controller";
-import deleteIcon from '../icons/delete.svg';
-import backIcon from '../icons/backspace.svg';
+import deleteIcon from '../assets/icons/delete.svg';
+import backIcon from '../assets/icons/backspace.svg';
+import '../assets/fonts/font.css';
 
 const kKeyWidth = 64;
 const kKeyHeight = 36;
@@ -42,32 +42,39 @@ export default function MathKeyboard() {
 function ExtraKeyboard(): MathKeyProp[] {
   const controller = useContext(ControllerContext);
 
-  const row1: Array<MathKeyProp> = ['\\sin', '\\cos', '\\tan', '\\log', '\\sqrt'].map((v) => ({
+  const row1: Array<MathKeyProp> = ['sin', 'cos', 'tan', 'log'].map((v) => ({
     children: v,
     onclick: () => {
-      controller.add(v + '({#?})');
+      controller.add(`\\${v}({#?})`);
     }
   }));
 
+  row1.push({
+    children: 'sqrt',
+    onclick: () => {
+      controller.add("\\sqrt");
+    }
+  })
+
   const row2Trig: Array<Record<"children" | "command", string>> = [
     {
-      children: '\\sin^{-1}',
+      children: 'asin',
       command: '\\arcsin({#?})'
     },
     {
-      children: '\\cos^{-1}',
+      children: 'cos',
       command: '\\arccos({#?})'
     },
     {
-      children: '\\tan^{-1}',
+      children: 'tan',
       command: '\\arctan({#?})'
     },
     {
-      children: 'e^{#?}',
+      children: 'e^',
       command: 'e^{#?}'
     },
     {
-      children: '{#?}^2',
+      children: '^2',
       command: '{#?}^2'
     },
   ];
@@ -77,21 +84,29 @@ function ExtraKeyboard(): MathKeyProp[] {
     onclick: () => controller.add(v.command)
   }));
 
-  const row3: Array<MathKeyProp> = ['\\frac{#?}{#?}', '(', ')'].map((v) => ({
-    children: v,
-    onclick: () => {
-      controller.add(v);
-    }
-  }));
+  const row3: Array<MathKeyProp> = [{
+    children: 'frac',
+    onclick: () => controller.add('\\frac'),
+  }];
+
+  ['(', ')'].map((v) => (
+    row3.push({
+      children: v,
+      onclick: () => {
+        controller.add(v);
+      }
+    })
+  ));
 
   row3.push({
-    children: '\\leftarrow',
+    children: '←',
     onclick: () => {
       controller.move("backword");
     }
   })
+
   row3.push({
-    children: '\\rightarrow',
+    children: '→',
     onclick: () => {
       controller.move("forward");
     }
@@ -108,12 +123,12 @@ function BasicKeyboard(): MathKeyProp[] {
   }));
 
   row1.push({
-    children: <img src={deleteIcon} alt="del" style={{ width: 24 }} />,
+    children: <img src={deleteIcon} alt="del" style={{ width: 20 }} />,
     onclick: () => controller.clear()
   })
 
   row1.push({
-    children: <img src={backIcon} alt="backspace" style={{ width: 24 }} />,
+    children: <img src={backIcon} alt="backspace" style={{ width: 20 }} />,
     onclick: () => controller.backspace()
   })
 
@@ -122,25 +137,20 @@ function BasicKeyboard(): MathKeyProp[] {
     onclick: () => controller.add(v)
   }));
 
-  const row3: Array<MathKeyProp> = ['1', '2', '3'].map((v) => ({
+  const row3: Array<MathKeyProp> = ['1', '2', '3', '*', '/'].map((v) => ({
     children: v,
     onclick: () => controller.add(v)
   }));
 
-  row3.push({
-    children: '\\times',
-    onclick: () => controller.add('*')
-  })
-
-  row3.push({
-    children: '\\div',
-    onclick: () => controller.add('/')
-  })
-
-  const row4: Array<MathKeyProp> = ['0', '.', '\\pi', 'e'].map((v) => ({
+  const row4: Array<MathKeyProp> = ['0', '.', 'e'].map((v) => ({
     children: v,
     onclick: () => controller.add(v)
   }));
+
+  row4.push({
+    children: 'pi',
+    onclick: () => controller.add('\\pi')
+  })
 
   row4.push({
     children: '=',
@@ -156,7 +166,6 @@ interface MathKeyProp {
 }
 
 function MathKey(prop: MathKeyProp) {
-
   return (
     <button
       onClick={prop.onclick}
@@ -168,11 +177,9 @@ function MathKey(prop: MathKeyProp) {
       }}
     >
       {typeof prop.children === 'string' ?
-        <MathView
-          value={prop.children}
-          readOnly={true}
-        /> :
-        prop.children}
+        <span style={{ fontFamily: "KaTeX", fontSize: 20 }}> {prop.children} </span> :
+        prop.children
+      }
     </button>
   );
 }

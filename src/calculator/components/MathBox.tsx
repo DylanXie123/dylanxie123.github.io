@@ -10,6 +10,7 @@ export default function MathBox() {
   return (
     <MathView
       virtualKeyboardMode='off'
+      fontsDirectory={'../assets/fonts'}
       onContentDidChange={
         mf => exp.update(mf.getValue("latex-expanded"))
       }
