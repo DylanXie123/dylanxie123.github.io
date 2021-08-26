@@ -5,7 +5,7 @@ import AlgebraLatex from 'algebra-latex'
 require('nerdamer/all');
 
 export enum Mode {
-  Eval = 0,
+  Eval,
   Var,
   Defint,
   Limit,

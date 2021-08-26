@@ -3,6 +3,7 @@ import React, { useContext } from "react";
 import { ExpContext, Mode } from "../model/expression";
 import MathView from 'react-math-view';
 import { ControllerContext } from "../model/controller";
+import Plot from "./Plot";
 
 const ResultBox = observer(() => {
   const exp = useContext(ExpContext);
@@ -53,6 +54,7 @@ const SymResultBox = observer(() => {
   return (<div>
     <InfoBox content={`=${exp.integrate}`} />
     <InfoBox content={`=${exp.diff}`} />
+    {exp.eval ? <Plot expStr={exp.eval} /> : null}
   </div>);
 });
 
@@ -61,7 +63,6 @@ interface InfoBoxProp {
   hideAdd?: boolean,
 }
 
-// TODO: Auto hide button when content is empty
 function InfoBox(prop: InfoBoxProp) {
   const controller = useContext(ControllerContext);
   return (
