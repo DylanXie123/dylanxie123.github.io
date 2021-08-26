@@ -4,12 +4,14 @@ import LC from 'leanengine';
 import Box, { BoxWithoutId, BoxType } from "./box";
 import { decrypt } from "../../login/auth";
 
+export type Status = "loading" | "error" | "done";
+
 export default class AirBoxModel {
   @observable
   private models: Array<Box> = [];
 
   @observable
-  private loading = true;
+  private status: Status = "loading";
 
   private liveQuery: LC.LiveQuery<LC.Queriable> | undefined;
 
@@ -21,28 +23,30 @@ export default class AirBoxModel {
         appKey: decrypt(process.env.REACT_APP_LEAN_AIRBOX_KEY),
       });
     }
-    this.subscribe();
   }
 
-  subscribe = () => {
+  subscribe = async () => {
     const query = new LC.Query('AirBox');
-    query.find().then(boxes =>
-      this.replace(boxes.map(items => this.db2model(items)))
-    );
-    query.subscribe().then(liveQuery => {
-      this.liveQuery = liveQuery;
-      liveQuery.on('create', item => {
-        if (item !== undefined) {
-          const box = this.db2model(item);
-          this.insert(box);
-        }
-      });
-      liveQuery.on('delete', item => {
-        if (item !== undefined) {
-          this.remove(item.get('objectId') as string);
-        }
-      });
-    });
+    query.find()
+      .then(boxes =>
+        this.replace(boxes.map(items => this.db2model(items))))
+      .then(() => {
+        query.subscribe().then(liveQuery => {
+          this.liveQuery = liveQuery;
+          liveQuery.on('create', item => {
+            if (item !== undefined) {
+              const box = this.db2model(item);
+              this.insert(box);
+            }
+          });
+          liveQuery.on('delete', item => {
+            if (item !== undefined) {
+              this.remove(item.get('objectId') as string);
+            }
+          });
+        });
+      })
+      .catch(action(() => { this.status = "error"; }));
   }
 
   unSubscribe = () => {
@@ -52,13 +56,13 @@ export default class AirBoxModel {
   @action
   private replace = (items: Array<Box>) => {
     this.models = items;
-    this.loading = false;
+    this.status = "done";
   }
 
   @action
   private insert = (item: Box) => {
     this.models.push(item);
-    this.loading = false;
+    this.status = "done";
   }
 
   @action
@@ -67,7 +71,7 @@ export default class AirBoxModel {
     if (index > -1) {
       this.models.splice(index, 1);
     }
-    this.loading = false;
+    this.status = "done";
   }
 
   private db2model(record: LC.Queriable): Box {
@@ -79,7 +83,7 @@ export default class AirBoxModel {
   }
 
   create = (box: BoxWithoutId) => {
-    action(() => this.loading = true);
+    action(() => this.status = "loading");
     const AirBoxDB = LC.Object.extend('AirBox');
     const airBoxDB = new AirBoxDB();
     airBoxDB.set('content', box.content);
@@ -88,7 +92,7 @@ export default class AirBoxModel {
   }
 
   delete = (id: string) => {
-    action(() => this.loading = true);
+    action(() => this.status = "loading");
     const airBoxDB = LC.Object.createWithoutData('AirBox', id);
     airBoxDB.destroy();
   }
@@ -97,8 +101,8 @@ export default class AirBoxModel {
     return this.models;
   }
 
-  @computed get isLoading() {
-    return this.loading;
+  @computed get getStatue() {
+    return this.status;
   }
 
 }
