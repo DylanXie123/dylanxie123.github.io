@@ -14,7 +14,7 @@
     "@types/react": "^16.9.50",
     "@types/react-dom": "^16.9.8",
     "@types/react-router-dom": "^5.1.5",
-    "algebra-latex": "github:DylanXie123/algebra-latex#v0.1",
+    "algebra-latex": "github:DylanXie123/algebra-latex#v0.1.1",
     "crypto-js": "^4.1.1",
     "function-plot": "^1.22.2",
     "leancloud-storage": "^4.10.1",
