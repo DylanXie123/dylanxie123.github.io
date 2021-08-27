@@ -17,6 +17,7 @@
     "algebra-latex": "github:DylanXie123/algebra-latex#v0.1.1",
     "crypto-js": "^4.1.1",
     "function-plot": "^1.22.2",
+    "idb": "^6.1.2",
     "leancloud-storage": "^4.10.1",
     "leanengine": "^3.7.0",
     "mathlive": "^0.69.4",

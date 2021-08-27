@@ -3,6 +3,7 @@ import { ControllerContext } from "../model/controller";
 import deleteIcon from '../assets/icons/delete.svg';
 import backIcon from '../assets/icons/backspace.svg';
 import '../assets/fonts/font.css';
+import { useExpStore } from "../model/expression";
 
 const kKeyWidth = 64;
 const kKeyHeight = 36;
@@ -116,6 +117,7 @@ function ExtraKeyboard(): MathKeyProp[] {
 
 function BasicKeyboard(): MathKeyProp[] {
   const controller = useContext(ControllerContext);
+  const expStore = useExpStore();
 
   const row1: Array<MathKeyProp> = ['7', '8', '9'].map((v) => ({
     children: v,
@@ -154,7 +156,7 @@ function BasicKeyboard(): MathKeyProp[] {
 
   row4.push({
     children: '=',
-    onclick: () => controller.add('/')
+    onclick: () => expStore.save()
   })
 
   return [...row1, ...row2, ...row3, ...row4];

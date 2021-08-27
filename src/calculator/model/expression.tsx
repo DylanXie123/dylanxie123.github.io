@@ -1,7 +1,8 @@
 import { action, computed, makeObservable, observable } from "mobx";
-import React from "react";
+import React, { useContext } from "react";
 import nerdamer from 'nerdamer';
-import AlgebraLatex from 'algebra-latex'
+import AlgebraLatex from 'algebra-latex';
+import { openDB, DBSchema, IDBPDatabase } from 'idb';
 require('nerdamer/all');
 
 export enum Mode {
@@ -12,9 +13,24 @@ export enum Mode {
   Matrix,
 };
 
+export interface ExprHistory {
+  expStr: string,
+  date: number,
+}
+
+interface ExprDB extends DBSchema {
+  expressions: {
+    value: ExprHistory;
+    key: number;
+  };
+}
+
 export default class Expression {
-  @observable
-  latex: string = '';
+  @observable latex: string = '';
+
+  @observable private history: ExprHistory[] = [];
+
+  private db: IDBPDatabase<ExprDB> | undefined;
 
   private parser = new AlgebraLatex();
 
@@ -23,9 +39,35 @@ export default class Expression {
   }
 
   @action
+  initHistory = async () => {
+    const db = await openDB<ExprDB>('expr-db', 1, {
+      upgrade(db) {
+        db.createObjectStore('expressions', { keyPath: 'date' });
+      },
+    });
+    this.db = db;
+    this.history = await db.getAll("expressions");
+    console.log(this.history)
+  }
+
+  @action
   update = (rawLatex: string) => {
     this.latex = rawLatex;
   }
+
+  @action
+  save = () => {
+    if (this.db && this.latex.length > 0) {
+      const item = { expStr: this.latex, date: Date.now() };
+      this.db.put('expressions', item);
+      this.history.push(item);
+    } else {
+      console.log('Invalid save')
+    }
+  }
+
+  @action
+  delete = () => { }
 
   @computed get expression() {
     try {
@@ -96,11 +138,19 @@ export default class Expression {
     }
   }
 
+  @computed get getHistory() {
+    return this.history
+  }
+
 }
 
 const calc2dis = new Map<RegExp, string>([
   [RegExp('\\\\cdot', 'g'), '\\times'],
 ]);
 
-const expStore = new Expression();
-export const ExpContext = React.createContext<Expression>(expStore);
+export const ExpContext = React.createContext<Expression>(new Expression());
+
+export const useExpStore = () => {
+  const store = useContext(ExpContext);
+  return store;
+}

@@ -1,12 +1,12 @@
 import { observer } from "mobx-react-lite";
 import React, { useContext } from "react";
-import { ExpContext, Mode } from "../model/expression";
+import { Mode, useExpStore } from "../model/expression";
 import MathView from 'react-math-view';
 import { ControllerContext } from "../model/controller";
 import Plot from "./Plot";
 
 const ResultBox = observer(() => {
-  const exp = useContext(ExpContext);
+  const exp = useExpStore();
 
   switch (exp.mode) {
     case Mode.Eval:
@@ -25,7 +25,7 @@ const ResultBox = observer(() => {
 });
 
 const EvalResultBox = observer(() => {
-  const exp = useContext(ExpContext);
+  const exp = useExpStore();
   const evalResult = exp.eval;
   const textResult = exp.text;
 
@@ -45,7 +45,7 @@ const EvalResultBox = observer(() => {
 
 
 const SymResultBox = observer(() => {
-  const exp = useContext(ExpContext);
+  const exp = useExpStore();
 
   if (exp.integrate === undefined) {
     return <div></div>;

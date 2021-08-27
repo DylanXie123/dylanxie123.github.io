@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
-import { ExpContext } from "../model/expression";
+import { useExpStore } from "../model/expression";
 import { ControllerContext } from '../model/controller';
 import MathView from "react-math-view";
 
 export default function MathBox() {
-  const exp = useContext(ExpContext);
+  const exp = useExpStore();
   const controller = useContext(ControllerContext);
 
   return (
