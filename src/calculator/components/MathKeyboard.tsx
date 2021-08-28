@@ -11,8 +11,8 @@ const kKeyHeight = 36;
 export default function MathKeyboard() {
 
   return (
-    <div style={{ position: 'fixed', bottom: 0, width: '100%', zIndex: -1 }}>
-      <div style={{ display: 'grid', gridTemplateColumns: `repeat(5, ${kKeyWidth}px)`, justifyContent: 'center', gap: 2 }}>
+    <div style={{ width: "100%", maxWidth: 400, margin: 'auto'}}>
+      <div style={{ display: 'grid', gridTemplateColumns: `repeat(5, 1fr)`, justifyContent: 'center', gap: 2 }}>
         {ExtraKeyboard().map(
           (key, index) => (
             <div key={'extra' + index}>
