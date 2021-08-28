@@ -173,8 +173,8 @@ function MathKey(prop: MathKeyProp) {
       onClick={prop.onclick}
       style={{
         textTransform: 'lowercase',
-        height: kKeyHeight,
-        width: kKeyWidth,
+        height: "100%",
+        width: "100%",
         background: 'none',
       }}
     >

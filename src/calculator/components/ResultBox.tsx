@@ -5,24 +5,26 @@ import MathView from 'react-math-view';
 import { ControllerContext } from "../model/controller";
 import Plot from "./Plot";
 
-const ResultBox = observer(() => {
+const ResultBox = () => {
   const exp = useExpStore();
 
   switch (exp.mode) {
     case Mode.Eval:
-      return (<>
-        <p>{exp.latex}</p>
-        <EvalResultBox />
-      </>);
+      return withGrid(<EvalResultBox />);
     case Mode.Var:
-      return (<>
-        <p>{exp.latex}</p>
-        <SymResultBox />
-      </>);
+      return (<SymResultBox />);
     default:
       return (<EvalResultBox />);
   }
-});
+};
+
+const withGrid = (Component: JSX.Element) => {
+  return (
+    <div style={{  }}>
+      {Component}
+    </div>
+  );
+}
 
 const EvalResultBox = observer(() => {
   const exp = useExpStore();
@@ -38,6 +40,7 @@ const EvalResultBox = observer(() => {
   }
 
   return (<div>
+    <p>{exp.latex}</p>
     <InfoBox content={`=${exp.eval}`} />
     <InfoBox content={`=${exp.text}`} />
   </div>);
@@ -52,6 +55,7 @@ const SymResultBox = observer(() => {
   }
 
   return (<div>
+    <p>{exp.latex}</p>
     <InfoBox content={`=${exp.integrate}`} />
     <InfoBox content={`=${exp.diff}`} />
     {exp.eval ? <Plot expStr={exp.eval} /> : null}
@@ -66,11 +70,11 @@ interface InfoBoxProp {
 function InfoBox(prop: InfoBoxProp) {
   const controller = useContext(ControllerContext);
   return (
-    <div style={{ display: 'flex' }}>
+    <div>
       <MathView
         value={prop.content}
         readOnly={true}
-        style={{ outline: 0 }}
+        style={{ outline: 0, display: 'inline-block' }}
         fontsDirectory={'../assets/fonts'}
       />
       <button
