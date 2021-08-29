@@ -25,6 +25,7 @@ export default function MathBox() {
         border: '2px dashed black',
         backgroundColor: 'white',
         gridColumn: '1/-1',
+        outline: 0,
       }}
     />
   );

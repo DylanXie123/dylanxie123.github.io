@@ -5,14 +5,11 @@ import backIcon from '../assets/icons/backspace.svg';
 import '../assets/fonts/font.css';
 import { useExpStore } from "../model/expression";
 
-const kKeyWidth = 64;
-const kKeyHeight = 36;
-
 export default function MathKeyboard() {
 
   return (
-    <div style={{ width: "100%", maxWidth: 400, margin: 'auto'}}>
-      <div style={{ display: 'grid', gridTemplateColumns: `repeat(5, 1fr)`, justifyContent: 'center', gap: 2 }}>
+    <div style={{ maxWidth: 400, margin: 'auto', userSelect: 'none' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', justifyContent: 'center', gap: 2, gridAutoRows: 'minmax(32px, auto)' }}>
         {ExtraKeyboard().map(
           (key, index) => (
             <div key={'extra' + index}>
