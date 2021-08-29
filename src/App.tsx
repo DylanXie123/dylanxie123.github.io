@@ -9,18 +9,20 @@ import Login from './login';
 
 export default function App() {
   return (
-    <>
+    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Header />
-      <Suspense fallback={<div>Loading...</div>}>
-        <Switch>
-          <Route exact path="/" render={() => <Home />} />
-          <Route path="/login" render={() => <Login />} />
-          <Route path="/calc" render={() => <Calculator />} />
-          <RedirectRoute path="/movie" defaultComponent={Movie} />
-          <RedirectRoute path="/airbox" defaultComponent={AirBox} />
-        </Switch>
-      </Suspense>
-    </>
+      <div style={{flex: '1 auto'}}>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Switch>
+            <Route exact path="/" render={() => <Home />} />
+            <Route path="/login" render={() => <Login />} />
+            <Route path="/calc" render={() => <Calculator />} />
+            <RedirectRoute path="/movie" defaultComponent={Movie} />
+            <RedirectRoute path="/airbox" defaultComponent={AirBox} />
+          </Switch>
+        </Suspense>
+      </div>
+    </div>
   );
 }
 

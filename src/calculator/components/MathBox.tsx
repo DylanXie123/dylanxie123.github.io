@@ -20,12 +20,12 @@ export default function MathBox() {
         }
       }}
       style={{
-        outline: '5px solid white',
         fontSize: 24,
-        margin: 5,
-        padding: 5,
+        marginBlock: 5,
         border: '2px dashed black',
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        gridColumn: '1/-1',
+        outline: 0,
       }}
     />
   );

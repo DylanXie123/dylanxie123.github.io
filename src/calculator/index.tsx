@@ -14,13 +14,29 @@ export default function Calculator() {
   useEffect(() => { expStore.initHistory() });
 
   return (
-    <ControllerContext.Provider value={controller}>
+    <ControllerContext.Provider value={controller} >
       <ExpContext.Provider value={expStore}>
-        <MathBox />
-        <ResultBox />
-        <HistoryBox />
-        <MathKeyboard />
+        <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+          <GridContainer>
+            <MathBox />
+            <div style={{ gridColumn: '1/9' }}><ResultBox /></div>
+            <div style={{ gridColumn: '9/-1' }}><HistoryBox /></div>
+          </GridContainer>
+          <div style={{ flexShrink: 0 }}>
+            <MathKeyboard />
+          </div>
+        </div>
       </ExpContext.Provider>
     </ControllerContext.Provider>
   );
+}
+
+const GridContainer = (props: { children: React.ReactNode }) => {
+  return (
+    <div style={{ width: '90%', margin: 'auto', flex: '1 0 auto' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)' }}>
+        {props.children}
+      </div>
+    </div>
+  )
 }
