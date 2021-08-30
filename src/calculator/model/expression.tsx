@@ -1,4 +1,4 @@
-import { action, computed, makeObservable, observable } from "mobx";
+import { action, computed, makeObservable, observable, runInAction } from "mobx";
 import React, { useContext } from "react";
 import nerdamer from 'nerdamer';
 import AlgebraLatex from 'algebra-latex';
@@ -26,7 +26,7 @@ interface ExprDB extends DBSchema {
 }
 
 export default class Expression {
-  @observable latex: string = '';
+  @observable private latex: string = '';
 
   @observable private history: ExprHistory[] = [];
 
@@ -38,7 +38,6 @@ export default class Expression {
     makeObservable(this);
   }
 
-  @action
   initHistory = async () => {
     const db = await openDB<ExprDB>('expr-db', 1, {
       upgrade(db) {
@@ -46,8 +45,8 @@ export default class Expression {
       },
     });
     this.db = db;
-    this.history = await db.getAll("expressions");
-    console.log(this.history)
+    const data = await db.getAll("expressions");
+    runInAction(() => { this.history = data });
   }
 
   @action
@@ -136,6 +135,10 @@ export default class Expression {
     } catch (error) {
       return undefined;
     }
+  }
+
+  @computed get getRawLaTeX() {
+    return this.latex;
   }
 
   @computed get getHistory() {
