@@ -66,7 +66,13 @@ export default class Expression {
   }
 
   @action
-  delete = () => { }
+  deleteHistory = (item: ExprHistory) => {
+    this.db?.delete('expressions', item.date);
+    const index = this.history.findIndex((history) => history.date === item.date);
+    if (index > -1) {
+      this.history.splice(index, 1);
+    }
+  }
 
   @computed get expression() {
     try {
