@@ -34,7 +34,7 @@ export default function Calculator() {
 const GridContainer = (props: { children: React.ReactNode }) => {
   return (
     <div style={{ width: '90%', margin: 'auto', flex: '1 0 auto' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(12, 1fr)', gap: 10 }}>
         {props.children}
       </div>
     </div>

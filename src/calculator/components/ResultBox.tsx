@@ -80,7 +80,7 @@ const InfoBox = (prop: InfoBoxProp) => {
     <TextBox content={prop.content} />;
 
   return (
-    <div style={{ border: '1px solid black' }}>
+    <div style={{ border: '1px solid black', marginBottom: 10 }}>
       <div style={{ backgroundColor: 'black', color: 'white', padding: 2, paddingLeft: 10, fontFamily: 'KaTeX', userSelect: "none" }}>{prop.title}</div>
       <div style={{ padding: 5, paddingLeft: 10 }}>
         {Component}
@@ -92,7 +92,7 @@ const InfoBox = (prop: InfoBoxProp) => {
 const ExprBox = (prop: { content: string }) => {
   const controller = useContext(ControllerContext);
   return (
-    <>
+    <div style={{ overflow: 'scroll' }}>
       <MathView
         value={prop.content}
         readOnly={true}
@@ -106,13 +106,13 @@ const ExprBox = (prop: { content: string }) => {
           controller.add(prop.content);
         }}
         children={'+'} />
-    </>
+    </div>
   );
 };
 
 const TextBox = (prop: { content: string }) => {
   return (
-    <span style={{ fontFamily: "KaTeX" }}>{prop.content}</span>
+    <span style={{ fontFamily: "KaTeX", wordBreak: 'break-word' }}>{prop.content}</span>
   );
 }
 
