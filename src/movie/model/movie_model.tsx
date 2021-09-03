@@ -16,8 +16,8 @@ export default class MovieModel {
     makeObservable(this);
     if (LC.applicationId === undefined || LC.applicationKey === undefined) {
       LC.init({
-        appId: decrypt(process.env.REACT_APP_LEAN_MOVIE_ID),
-        appKey: decrypt(process.env.REACT_APP_LEAN_MOVIE_KEY),
+        appId: decrypt(process.env.REACT_APP_LEAN_ID),
+        appKey: decrypt(process.env.REACT_APP_LEAN_KEY),
       });
     }
   }

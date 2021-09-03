@@ -6,10 +6,8 @@ on:
 
 env: 
   REACT_APP_OMDb_API: ${{ secrets.API_KEY }}
-  REACT_APP_LEAN_MOVIE_ID: ${{ secrets.REACT_APP_LEAN_MOVIE_ID }}
-  REACT_APP_LEAN_MOVIE_KEY: ${{ secrets.REACT_APP_LEAN_MOVIE_KEY }}
-  REACT_APP_LEAN_AIRBOX_ID: ${{ secrets.REACT_APP_LEAN_AIRBOX_ID }}
-  REACT_APP_LEAN_AIRBOX_KEY: ${{ secrets.REACT_APP_LEAN_AIRBOX_KEY }}
+  REACT_APP_LEAN_ID: ${{ secrets.REACT_APP_LEAN_ID }}
+  REACT_APP_LEAN_KEY: ${{ secrets.REACT_APP_LEAN_KEY }}
 jobs:
   deploy:
     runs-on: ubuntu-latest

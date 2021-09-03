@@ -19,8 +19,8 @@ export default class AirBoxModel {
     makeObservable(this);
     if (LC.applicationId === undefined || LC.applicationKey === undefined) {
       LC.init({
-        appId: decrypt(process.env.REACT_APP_LEAN_AIRBOX_ID),
-        appKey: decrypt(process.env.REACT_APP_LEAN_AIRBOX_KEY),
+        appId: decrypt(process.env.REACT_APP_LEAN_ID),
+        appKey: decrypt(process.env.REACT_APP_LEAN_KEY),
       });
     }
   }
