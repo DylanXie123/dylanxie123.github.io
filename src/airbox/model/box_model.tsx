@@ -2,7 +2,7 @@ import { action, computed, makeObservable, observable } from "mobx";
 import React from "react";
 import LC from 'leanengine';
 import Box, { BoxWithoutId, BoxType } from "./box";
-import { decrypt } from "../../login/auth";
+import { decrypt, haveKey } from "../../login/auth";
 
 export type Status = "loading" | "error" | "done";
 
@@ -18,10 +18,12 @@ export default class AirBoxModel {
   constructor() {
     makeObservable(this);
     if (LC.applicationId === undefined || LC.applicationKey === undefined) {
-      LC.init({
-        appId: decrypt(process.env.REACT_APP_LEAN_ID),
-        appKey: decrypt(process.env.REACT_APP_LEAN_KEY),
-      });
+      if (haveKey()) {
+        LC.init({
+          appId: decrypt(process.env.REACT_APP_LEAN_ID),
+          appKey: decrypt(process.env.REACT_APP_LEAN_KEY),
+        });
+      }
     }
   }
 

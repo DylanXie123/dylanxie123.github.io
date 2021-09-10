@@ -1,7 +1,7 @@
 import { action, computed, makeObservable, observable } from "mobx";
 import React from "react";
 import LC from 'leanengine';
-import { decrypt } from "../../login/auth";
+import { decrypt, haveKey } from "../../login/auth";
 
 export default class MovieModel {
   @observable
@@ -15,10 +15,12 @@ export default class MovieModel {
   constructor() {
     makeObservable(this);
     if (LC.applicationId === undefined || LC.applicationKey === undefined) {
-      LC.init({
-        appId: decrypt(process.env.REACT_APP_LEAN_ID),
-        appKey: decrypt(process.env.REACT_APP_LEAN_KEY),
-      });
+      if (haveKey()) {
+        LC.init({
+          appId: decrypt(process.env.REACT_APP_LEAN_ID),
+          appKey: decrypt(process.env.REACT_APP_LEAN_KEY),
+        });
+      }
     }
   }
 
@@ -171,5 +173,5 @@ interface MoviewithRef extends Movie {
   ref: string;
 }
 
-const movieModel = new MovieModel();
-export const MovieModelContext = React.createContext<MovieModel>(movieModel);
+let movieModel = new MovieModel();
+export let MovieModelContext = React.createContext<MovieModel>(movieModel);
