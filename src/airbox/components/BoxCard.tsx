@@ -8,11 +8,21 @@ interface BoxCardProp {
 
 const BoxCard = (prop: BoxCardProp) => {
   const airBoxModel = useContext(AirBoxModelContext);
+
+  const getBoxDom = (box: Box) => {
+    switch (box.boxType.split('/')[0]) {
+      case 'text':
+        return UrlBox(prop.box.content)
+      case 'image':
+        return ImageBox(prop.box)
+      default:
+        return UrlBox(prop.box.refUrl!)
+    }
+  }
+
   return (
     <div style={{ flex: '1 200px', boxSizing: 'border-box', maxWidth: '100%', border: '1px solid', overflowWrap: 'break-word' }}>
-      {prop.box.boxType.startsWith('image') ?
-        ImageBox(prop.box) :
-        UrlBox(prop.box.content)}
+      {getBoxDom(prop.box)}
       <button onClick={() => { airBoxModel.delete(prop.box) }}>Delete</button>
       <button onClick={() => { navigator.clipboard.writeText(prop.box.content) }}>Copy</button>
     </div>
