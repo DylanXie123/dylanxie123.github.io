@@ -20,11 +20,29 @@ const BoxCard = (prop: BoxCardProp) => {
     }
   }
 
+  const boxStyle: React.CSSProperties = {
+    flex: '1',
+    paddingBlock: '10px',
+    paddingInline: '20px',
+    border: '2px solid lightgrey',
+    borderRadius: '5px',
+    margin: '5px',
+    overflowWrap: 'break-word',
+  };
+
+  const btnGroupStyle: React.CSSProperties = {
+    marginTop: '5px',
+    borderTop: '2px solid lightgrey',
+    paddingTop: '5px',
+  };
+
   return (
-    <div style={{ flex: '1 200px', boxSizing: 'border-box', maxWidth: '100%', border: '1px solid', overflowWrap: 'break-word' }}>
+    <div style={boxStyle}>
       {getBoxDom(prop.box)}
-      <button onClick={() => { airBoxModel.delete(prop.box) }}>Delete</button>
-      <button onClick={() => { navigator.clipboard.writeText(prop.box.content) }}>Copy</button>
+      <div style={btnGroupStyle}>
+        <button onClick={() => { airBoxModel.delete(prop.box) }}>Delete</button>
+        <button onClick={() => { navigator.clipboard.writeText(prop.box.content) }}>Copy</button>
+      </div>
     </div>
   );
 }

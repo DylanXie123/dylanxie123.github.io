@@ -10,8 +10,16 @@ const BoxBoard = observer(() => {
     <BoxCard key={box.id} box={box} />
   ));
 
+  const style: React.CSSProperties = {
+    display: 'flex',
+    flexDirection: 'column',
+    margin: 'auto',
+    marginBlock: '10px',
+    maxWidth: '900px',
+  };
+
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', padding: '10px' }}>
+    <div style={style}>
       {boxes}
     </div>
   );
