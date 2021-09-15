@@ -5,12 +5,9 @@ export default interface Box extends BoxWithoutId {
 export interface BoxWithoutId {
   content: string;
 
-  boxType: BoxType;
-}
+  boxType: string;
 
-export enum BoxType {
-  Text = 'Text',
-  Image = 'Image',
-  URL = 'URL',
-  File = 'File',
+  refId?: string;
+
+  refUrl?: string;
 }

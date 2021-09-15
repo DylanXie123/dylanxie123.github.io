@@ -10,8 +10,10 @@ const BoxCard = (prop: BoxCardProp) => {
   const airBoxModel = useContext(AirBoxModelContext);
   return (
     <div style={{ flex: '1 200px', boxSizing: 'border-box', maxWidth: '100%', border: '1px solid', overflowWrap: 'break-word' }}>
-      {UrlBox(prop.box.content)}
-      <button onClick={() => { airBoxModel.delete(prop.box.id) }}>Delete</button>
+      {prop.box.boxType.startsWith('image') ?
+        ImageBox(prop.box) :
+        UrlBox(prop.box.content)}
+      <button onClick={() => { airBoxModel.delete(prop.box) }}>Delete</button>
       <button onClick={() => { navigator.clipboard.writeText(prop.box.content) }}>Copy</button>
     </div>
   );
@@ -56,6 +58,12 @@ const UrlBox = (content: string) => {
 
   }
   return elements
+}
+
+const ImageBox = (box: Box) => {
+  return (
+    <img src={box.refUrl} alt={box.content} height={200} />
+  );
 }
 
 export default BoxCard

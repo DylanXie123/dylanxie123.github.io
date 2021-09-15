@@ -1,7 +1,7 @@
 import { action, computed, makeObservable, observable } from "mobx";
 import React from "react";
 import LC from 'leanengine';
-import Box, { BoxWithoutId, BoxType } from "./box";
+import Box, { BoxWithoutId } from "./box";
 import { decrypt, haveKey } from "../../login/auth";
 
 export type Status = "loading" | "error" | "done";
@@ -80,22 +80,52 @@ export default class AirBoxModel {
     return {
       id: record.get('objectId') as string,
       content: record.get('content') as string,
-      boxType: BoxType[record.get('content') as keyof typeof BoxType],
+      boxType: record.get('boxType') as string,
+      refId: record.get('refId') as string,
+      refUrl: record.get('refUrl') as string,
     };
   }
 
-  create = (box: BoxWithoutId) => {
-    action(() => this.status = "loading");
+  private create = (box: BoxWithoutId) => {
     const AirBoxDB = LC.Object.extend('AirBox');
     const airBoxDB = new AirBoxDB();
     airBoxDB.set('content', box.content);
-    airBoxDB.set('boxType', BoxType[box.boxType]);
-    return airBoxDB.save();
+    airBoxDB.set('boxType', box.boxType);
+    airBoxDB.set('refId', box.refId);
+    airBoxDB.set('refUrl', box.refUrl);
+    return airBoxDB.save()
   }
 
-  delete = (id: string) => {
+  @action
+  createText = (text: string, type?: string) => {
+    this.status = "loading";
+    return this.create({
+      content: text,
+      boxType: type ?? 'text/plain',
+    })
+  }
+
+  @action
+  createFile = async (box: File) => {
+    this.status = "loading";
+    const file = new LC.File(box.name, box, box.type);
+    const savedFile = await file.save();
+
+    return this.create({
+      content: savedFile.name(),
+      boxType: box.type,
+      refId: savedFile.id,
+      refUrl: savedFile.url(),
+    })
+  }
+
+  delete = (box: Box) => {
     action(() => this.status = "loading");
-    const airBoxDB = LC.Object.createWithoutData('AirBox', id);
+    if (box.refId) {
+      const file = LC.File.createWithoutData(box.refId);
+      file.destroy();
+    }
+    const airBoxDB = LC.Object.createWithoutData('AirBox', box.id);
     airBoxDB.destroy();
   }
 
