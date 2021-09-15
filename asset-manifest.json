@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/static/css/main.4e0d64fe.chunk.css",
-    "main.js": "/static/js/main.1b72b675.chunk.js",
-    "main.js.map": "/static/js/main.1b72b675.chunk.js.map",
+    "main.js": "/static/js/main.a83ea2be.chunk.js",
+    "main.js.map": "/static/js/main.a83ea2be.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.34f32378.js",
     "runtime-main.js.map": "/static/js/runtime-main.34f32378.js.map",
     "static/css/2.c6687e4d.chunk.css": "/static/css/2.c6687e4d.chunk.css",
-    "static/js/2.34cc665a.chunk.js": "/static/js/2.34cc665a.chunk.js",
-    "static/js/2.34cc665a.chunk.js.map": "/static/js/2.34cc665a.chunk.js.map",
+    "static/js/2.27bb0f43.chunk.js": "/static/js/2.27bb0f43.chunk.js",
+    "static/js/2.27bb0f43.chunk.js.map": "/static/js/2.27bb0f43.chunk.js.map",
     "static/js/3.7f19d1f0.chunk.js": "/static/js/3.7f19d1f0.chunk.js",
     "static/js/3.7f19d1f0.chunk.js.map": "/static/js/3.7f19d1f0.chunk.js.map",
     "index.html": "/index.html",
@@ -15,7 +15,7 @@
     "service-worker.js.map": "/service-worker.js.map",
     "static/css/2.c6687e4d.chunk.css.map": "/static/css/2.c6687e4d.chunk.css.map",
     "static/css/main.4e0d64fe.chunk.css.map": "/static/css/main.4e0d64fe.chunk.css.map",
-    "static/js/2.34cc665a.chunk.js.LICENSE.txt": "/static/js/2.34cc665a.chunk.js.LICENSE.txt",
+    "static/js/2.27bb0f43.chunk.js.LICENSE.txt": "/static/js/2.27bb0f43.chunk.js.LICENSE.txt",
     "static/media/mathlive-fonts.css": "/static/media/KaTeX_Typewriter-Regular.150d2ef1.woff2",
     "static/media/backspace.521c7719.svg": "/static/media/backspace.521c7719.svg",
     "static/media/delete.020411b3.svg": "/static/media/delete.020411b3.svg"
@@ -23,8 +23,8 @@
   "entrypoints": [
     "static/js/runtime-main.34f32378.js",
     "static/css/2.c6687e4d.chunk.css",
-    "static/js/2.34cc665a.chunk.js",
+    "static/js/2.27bb0f43.chunk.js",
     "static/css/main.4e0d64fe.chunk.css",
-    "static/js/main.1b72b675.chunk.js"
+    "static/js/main.a83ea2be.chunk.js"
   ]
 }
