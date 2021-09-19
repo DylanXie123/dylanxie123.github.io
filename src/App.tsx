@@ -6,12 +6,13 @@ import Calculator from './calculator';
 import Movie from './movie';
 import AirBox from './airbox';
 import Login from './login';
+import { css } from "@emotion/css";
 
 export default function App() {
   return (
-    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <>
       <Header />
-      <div style={{flex: '1 auto'}}>
+      <div style={{ flex: '1 auto' }}>
         <Suspense fallback={<div>Loading...</div>}>
           <Switch>
             <Route exact path="/" render={() => <Home />} />
@@ -22,23 +23,28 @@ export default function App() {
           </Switch>
         </Suspense>
       </div>
-    </div>
+    </>
   );
 }
 
 function Header() {
-  const linkStyle: React.CSSProperties = {
-    color: 'white',
-    fontSize: 20,
-    textDecoration: 'none',
-    padding: 8,
-  };
+  const linkStyle = css`
+    color: white;
+    font-size: 20px;
+    padding-inline: 8px;
+    text-decoration: transparent underline 3px;
+    transition: all ease-in-out 200ms;
+    &:hover {
+      background-color: white;
+      color: black;
+    };
+  `;
   return (
-    <nav style={{ backgroundColor: '#1b1c1d', padding: 8 }}>
-      <NavLink style={linkStyle} to='/'>Home</NavLink>
-      <NavLink style={linkStyle} to='/calc'>Calc</NavLink>
-      <NavLink style={linkStyle} to='/movie'>Movie</NavLink>
-      <NavLink style={linkStyle} to='/airbox'>AirBox</NavLink>
+    <nav style={{ backgroundColor: '#1b1c1d', padding: '8px' }}>
+      <NavLink className={linkStyle} to='/'>Home</NavLink>
+      <NavLink className={linkStyle} to='/calc'>Calc</NavLink>
+      <NavLink className={linkStyle} to='/movie'>Movie</NavLink>
+      <NavLink className={linkStyle} to='/airbox'>AirBox</NavLink>
     </nav>
   )
 }

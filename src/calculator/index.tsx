@@ -16,15 +16,13 @@ export default function Calculator() {
   return (
     <ControllerContext.Provider value={controller} >
       <ExpContext.Provider value={expStore}>
-        <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-          <GridContainer>
-            <MathBox />
-            <div style={{ gridColumn: '1/9' }}><ResultBox /></div>
-            <div style={{ gridColumn: '9/-1' }}><HistoryBox /></div>
-          </GridContainer>
-          <div style={{ flexShrink: 0 }}>
-            <MathKeyboard />
-          </div>
+        <GridContainer>
+          <MathBox />
+          <div style={{ gridColumn: '1/9' }}><ResultBox /></div>
+          <div style={{ gridColumn: '9/-1' }}><HistoryBox /></div>
+        </GridContainer>
+        <div style={{ position: 'fixed', bottom: 10, width: '100%' }}>
+          <MathKeyboard />
         </div>
       </ExpContext.Provider>
     </ControllerContext.Provider>

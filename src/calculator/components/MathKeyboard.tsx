@@ -4,35 +4,45 @@ import deleteIcon from '../assets/icons/delete.svg';
 import backIcon from '../assets/icons/backspace.svg';
 import '../assets/fonts/font.css';
 import { useExpStore } from "../model/expression";
+import { css } from "@emotion/css";
 
 export default function MathKeyboard() {
 
+  const keyboardStyle = css`
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    justify-content: center;
+    gap: 2px;
+    grid-auto-rows: minmax(32px, auto);
+    max-width: 350px;
+    margin: auto;
+    user-select: none;
+  `;
+
   return (
-    <div style={{ maxWidth: 400, margin: 'auto', userSelect: 'none' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', justifyContent: 'center', gap: 2, gridAutoRows: 'minmax(32px, auto)' }}>
-        {ExtraKeyboard().map(
-          (key, index) => (
-            <div key={'extra' + index}>
-              <MathKey
-                children={key.children}
-                onclick={key.onclick}
-                key={index}
-              />
-            </div>
-          )
-        )}
-        {BasicKeyboard().map(
-          (key, index) => (
-            <div key={'basic' + index} >
-              <MathKey
-                children={key.children}
-                onclick={key.onclick}
-                key={index}
-              />
-            </div>
-          )
-        )}
-      </div>
+    <div className={keyboardStyle}>
+      {ExtraKeyboard().map(
+        (key, index) => (
+          <div key={'extra' + index}>
+            <MathKey
+              children={key.children}
+              onclick={key.onclick}
+              key={index}
+            />
+          </div>
+        )
+      )}
+      {BasicKeyboard().map(
+        (key, index) => (
+          <div key={'basic' + index} >
+            <MathKey
+              children={key.children}
+              onclick={key.onclick}
+              key={index}
+            />
+          </div>
+        )
+      )}
     </div>
   );
 }
@@ -165,20 +175,43 @@ interface MathKeyProp {
 }
 
 function MathKey(prop: MathKeyProp) {
+
+  const btnStyle = css`
+    text-transform: lowercase;
+    cursor: pointer;
+    height: 100%;
+    width: 100%;
+    padding: 2px;
+    background: none;
+    border: 1px solid;
+    border-radius: 5px;
+    transition: all 200ms ease-in-out;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    &:hover,
+    &:focus {
+      background: lightgrey;
+    };
+    &:focus {
+      transform: scale(0.95);
+      border-width: 2px;
+      padding: 1px;
+    }
+  `;
+
+  const spanStyle = css`
+    font-family:'KaTeX';
+    font-size: 20px;
+  `;
+
   return (
     <button
       onClick={prop.onclick}
-      style={{
-        textTransform: 'lowercase',
-        height: "100%",
-        width: "100%",
-        background: 'none',
-      }}
+      className={btnStyle}
     >
       {typeof prop.children === 'string' ?
-        <span style={{ fontFamily: "KaTeX", fontSize: 20 }}> {prop.children} </span> :
-        prop.children
-      }
+        <span className={spanStyle}> {prop.children} </span> :
+        prop.children}
     </button>
   );
 }
