@@ -188,8 +188,7 @@ function MathKey(prop: MathKeyProp) {
     transition: all 200ms ease-in-out;
     -webkit-appearance: none;
     -moz-appearance: none;
-    &:hover,
-    &:focus {
+    &:hover {
       background: lightgrey;
     };
     &:focus {

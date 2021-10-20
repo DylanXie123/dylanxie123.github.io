@@ -20,8 +20,17 @@ const AddBoxCard = () => {
     }
   }
 
+  const style: React.CSSProperties = {
+    width: '100%',
+    padding: '5px',
+    boxSizing: 'border-box',
+    backgroundColor: 'grey',
+    position: 'fixed',
+    bottom: '0',
+  }
+
   return (
-    <div style={{ border: '1px solid' }}>
+    <div style={style}>
       <form onSubmit={handleSubmit}>
         <input
           type='text'

@@ -32,7 +32,7 @@ function Header() {
     color: white;
     font-size: 20px;
     padding-inline: 8px;
-    text-decoration: transparent underline 3px;
+    text-decoration: none;
     transition: all ease-in-out 200ms;
     &:hover {
       background-color: white;

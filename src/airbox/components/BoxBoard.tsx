@@ -21,6 +21,7 @@ const BoxBoard = observer(() => {
   return (
     <div style={style}>
       {boxes}
+      <div style={{ height: '50px' }} />
     </div>
   );
 })
