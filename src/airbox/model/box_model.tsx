@@ -30,8 +30,9 @@ export default class AirBoxModel {
   subscribe = async () => {
     const query = new LC.Query('AirBox');
     query.find()
-      .then(boxes =>
-        this.replace(boxes.map(items => this.db2model(items))))
+      .then(boxes => this.replace(
+        boxes.map(items => this.db2model(items)).reverse()
+      ))
       .then(() => {
         query.subscribe().then(liveQuery => {
           this.liveQuery = liveQuery;
@@ -63,7 +64,7 @@ export default class AirBoxModel {
 
   @action
   private insert = (item: Box) => {
-    this.models.push(item);
+    this.models.unshift(item);
     this.status = "done";
   }
 

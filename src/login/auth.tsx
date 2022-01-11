@@ -2,7 +2,7 @@ import AES from 'crypto-js/aes';
 import Utf8Encode from 'crypto-js/enc-utf8';
 
 export const authenticate = (key: string) => {
-  const cipher = 'U2FsdGVkX188/AO4D/R1RFTPjxyveU/Y+6jmDIbN4fYatwhuTXYU0yBUO5DwXVzx';
+  const cipher = 'U2FsdGVkX19LkQydklw7F7RbgOdCBwXD1cfvQjLgfTYe+go46H+MPCsBFVBV1Q2w';
   const text = AES.decrypt(cipher, key).toString(Utf8Encode)
   return text === 'Hello, React&App'
 };

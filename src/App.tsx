@@ -3,7 +3,6 @@ import { NavLink, Redirect, Route, Switch, useLocation } from "react-router-dom"
 import { haveKey } from "./login/auth";
 import Home from './home';
 import Calculator from './calculator';
-import Movie from './movie';
 import AirBox from './airbox';
 import Login from './login';
 import { css } from "@emotion/css";
@@ -18,7 +17,6 @@ export default function App() {
             <Route exact path="/" render={() => <Home />} />
             <Route path="/login" render={() => <Login />} />
             <Route path="/calc" render={() => <Calculator />} />
-            <RedirectRoute path="/movie" defaultComponent={Movie} />
             <RedirectRoute path="/airbox" defaultComponent={AirBox} />
           </Switch>
         </Suspense>
@@ -43,7 +41,6 @@ function Header() {
     <nav style={{ backgroundColor: '#1b1c1d', padding: '8px' }}>
       <NavLink className={linkStyle} to='/'>Home</NavLink>
       <NavLink className={linkStyle} to='/calc'>Calc</NavLink>
-      <NavLink className={linkStyle} to='/movie'>Movie</NavLink>
       <NavLink className={linkStyle} to='/airbox'>AirBox</NavLink>
     </nav>
   )
