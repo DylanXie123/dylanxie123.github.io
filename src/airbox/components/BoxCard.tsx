@@ -1,16 +1,16 @@
 import React, { useContext } from "react";
-import Box from "../model/box";
+import ContentModel from "../model/contentModel";
 import { AirBoxModelContext } from "../model/box_model";
 
 interface BoxCardProp {
-  box: Box
+  box: ContentModel
 }
 
 const BoxCard = (prop: BoxCardProp) => {
   const airBoxModel = useContext(AirBoxModelContext);
 
-  const getBoxDom = (box: Box) => {
-    switch (box.boxType.split('/')[0]) {
+  const getBoxDom = (box: ContentModel) => {
+    switch (box.type.split('/')[0]) {
       case 'text':
         return UrlBox(prop.box.content)
       case 'image':
@@ -40,7 +40,7 @@ const BoxCard = (prop: BoxCardProp) => {
     <div style={boxStyle}>
       {getBoxDom(prop.box)}
       <div style={btnGroupStyle}>
-        <button onClick={() => { airBoxModel.delete(prop.box) }}>Delete</button>
+        <button onClick={() => { airBoxModel.removeItem(prop.box.id) }}>Delete</button>
         <button onClick={() => { navigator.clipboard.writeText(prop.box.content) }}>Copy</button>
       </div>
     </div>
@@ -88,7 +88,7 @@ const UrlBox = (content: string) => {
   return elements
 }
 
-const ImageBox = (box: Box) => {
+const ImageBox = (box: ContentModel) => {
   return (
     <img src={box.refUrl} alt={box.content} height={200} />
   );

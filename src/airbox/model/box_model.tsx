@@ -1,143 +1,157 @@
 import { action, computed, makeObservable, observable } from "mobx";
 import React from "react";
-import LC from 'leanengine';
-import Box, { BoxWithoutId } from "./box";
-import { decrypt, haveKey } from "../../login/auth";
-
-export type Status = "loading" | "error" | "done";
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import ContentModel, { createContentModel } from "./contentModel";
+import { decrypt } from "../../login/auth";
 
 export default class AirBoxModel {
   @observable
-  private models: Array<Box> = [];
+  private models: ContentModel[] = [];
 
   @observable
-  private status: Status = "loading";
+  private updatingItem: number = -1;
 
-  private liveQuery: LC.LiveQuery<LC.Queriable> | undefined;
+  private supabase!: SupabaseClient;
 
   constructor() {
     makeObservable(this);
-    if (LC.applicationId === undefined || LC.applicationKey === undefined) {
-      if (haveKey()) {
-        LC.init({
-          appId: decrypt(process.env.REACT_APP_LEAN_ID),
-          appKey: decrypt(process.env.REACT_APP_LEAN_KEY),
-        });
+    this.initSupabase();
+  }
+
+  private initSupabase = () => {
+    const options = {
+      schema: 'public',
+      headers: { 'x-my-custom-header': 'airbox' },
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: true
+    }
+    this.supabase = createClient(
+      decrypt(process.env.REACT_APP_SUPABASE_URL!),
+      decrypt(process.env.REACT_APP_SUPABASE_KEY!),
+      options
+    );
+  }
+
+  createText = async (text: string) => {
+    const modelItem = createContentModel(text, 'text/plain');
+    const undoFn = this.insertModel(modelItem);
+    const dbResult = await this.insertDB(modelItem);
+    if (dbResult !== false) {
+      return true;
+    } else {
+      undoFn();
+      return false;
+    }
+  }
+
+  @action
+  createFile = (file: File) => {
+    // this.status = "loading";
+    // const savedFile = await file.save();
+
+    // return this.create({
+    //   content: savedFile.name(),
+    //   boxType: box.type,
+    //   refId: savedFile.id,
+    //   refUrl: savedFile.url(),
+    // })
+  }
+
+  @action
+  private insertModel = (item: ContentModel) => {
+    const insertIndex = 0;
+    this.models.splice(insertIndex, 0, item);
+    this.updatingItem = insertIndex;
+
+    const undoFn = () => {
+      this.models.splice(insertIndex, 1);
+      this.updatingItem = -1;
+    }
+
+    return action(undoFn);
+  }
+
+  private insertDB = async (item: ContentModel) => {
+    try {
+      const { data, error } = await this.supabase
+        .from<ContentModel>('contents')
+        .insert(item);
+      if (error === null) return data.map(this.db2model);
+    } catch (_) { }
+    return false;
+  }
+
+  @action
+  removeItem = async (uuid: string) => {
+    const removeIndex = this.models.findIndex(v => v.id === uuid);
+    if (removeIndex > -1) {
+      const undoFn = this.removeModel(removeIndex);
+      const dbResult = await this.removeDB(uuid);
+      if (dbResult === true) {
+        return true;
+      } else {
+        undoFn();
+        return false;
       }
     }
   }
 
-  subscribe = async () => {
-    const query = new LC.Query('AirBox');
-    query.find()
-      .then(boxes => this.replace(
-        boxes.map(items => this.db2model(items)).reverse()
-      ))
-      .then(() => {
-        query.subscribe().then(liveQuery => {
-          this.liveQuery = liveQuery;
-          liveQuery.on('create', item => {
-            if (item !== undefined) {
-              const box = this.db2model(item);
-              this.insert(box);
-            }
-          });
-          liveQuery.on('delete', item => {
-            if (item !== undefined) {
-              this.remove(item.get('objectId') as string);
-            }
-          });
-        });
-      })
-      .catch(action(() => { this.status = "error"; }));
-  }
-
-  unSubscribe = () => {
-    this.liveQuery?.unsubscribe();
-  }
-
   @action
-  private replace = (items: Array<Box>) => {
-    this.models = items;
-    this.status = "done";
-  }
+  private removeModel = (removeIndex: number) => {
+    const modelItem = this.models[removeIndex];
+    this.models.splice(removeIndex, 1);
+    this.updatingItem = removeIndex;
 
-  @action
-  private insert = (item: Box) => {
-    this.models.unshift(item);
-    this.status = "done";
-  }
-
-  @action
-  private remove = (id: string) => {
-    const index = this.models.findIndex((model) => model.id === id);
-    if (index > -1) {
-      this.models.splice(index, 1);
+    const undoFn = () => {
+      this.models.splice(removeIndex, 0, modelItem);
+      this.updatingItem = -1;
     }
-    this.status = "done";
+
+    return action(undoFn);
   }
 
-  private db2model(record: LC.Queriable): Box {
+  private removeDB = async (id: string) => {
+    try {
+      const { error } = await this.supabase
+        .from('contents')
+        .delete()
+        .match({ id: id });
+      if (error === null) return true;
+    } catch (_) { }
+    return false;
+  }
+
+  @action
+  retrieve = async () => {
+    this.updatingItem = 0;
+    const { data, error } = await this.supabase
+      .from('contents')
+      .select();
+    this.updatingItem = -1;
+    if (error === null) {
+      this.models = data.map(this.db2model);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  private db2model(dbItem: any): ContentModel {
+    console.log(dbItem)
     return {
-      id: record.get('objectId') as string,
-      content: record.get('content') as string,
-      boxType: record.get('boxType') as string,
-      refId: record.get('refId') as string,
-      refUrl: record.get('refUrl') as string,
+      ...dbItem,
+      createdDate: Date.parse(dbItem.createdDate),
     };
   }
 
-  private create = (box: BoxWithoutId) => {
-    const AirBoxDB = LC.Object.extend('AirBox');
-    const airBoxDB = new AirBoxDB();
-    airBoxDB.set('content', box.content);
-    airBoxDB.set('boxType', box.boxType);
-    airBoxDB.set('refId', box.refId);
-    airBoxDB.set('refUrl', box.refUrl);
-    return airBoxDB.save()
-  }
-
-  @action
-  createText = (text: string, type?: string) => {
-    this.status = "loading";
-    return this.create({
-      content: text,
-      boxType: type ?? 'text/plain',
-    })
-  }
-
-  @action
-  createFile = async (box: File) => {
-    this.status = "loading";
-    const file = new LC.File(box.name, box, box.type);
-    const savedFile = await file.save();
-
-    return this.create({
-      content: savedFile.name(),
-      boxType: box.type,
-      refId: savedFile.id,
-      refUrl: savedFile.url(),
-    })
-  }
-
-  delete = (box: Box) => {
-    action(() => this.status = "loading");
-    if (box.refId) {
-      const file = LC.File.createWithoutData(box.refId);
-      file.destroy();
-    }
-    const airBoxDB = LC.Object.createWithoutData('AirBox', box.id);
-    airBoxDB.destroy();
-  }
-
-  @computed get boxes() {
+  @computed get getModels() {
     return this.models;
   }
 
-  @computed get getStatue() {
-    return this.status;
+  @computed get getUpdatingItem() {
+    return this.updatingItem;
   }
-
 }
 
 const airBoxModel = new AirBoxModel();

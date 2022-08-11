@@ -6,7 +6,7 @@ import BoxCard from './BoxCard';
 const BoxBoard = observer(() => {
   const airBoxModel = useContext(AirBoxModelContext);
 
-  const boxes = airBoxModel.boxes.map(box => (
+  const boxes = airBoxModel.getModels.map(box => (
     <BoxCard key={box.id} box={box} />
   ));
 

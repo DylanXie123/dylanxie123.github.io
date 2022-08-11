@@ -4,13 +4,10 @@ import { AirBoxModelContext } from "../model/box_model";
 
 const UpdatingIndicator = observer(() => {
   const airBoxModel = useContext(AirBoxModelContext);
-  switch (airBoxModel.getStatue) {
-    case "loading":
-      return (<p>Updating...</p>);
-    case "error":
-      return (<p>Error😥</p>);
-    default:
-      return null;
+  if (airBoxModel.getUpdatingItem > -1) {
+    return (<p>Updating...</p>);
+  } else {
+    return null;
   }
 })
 

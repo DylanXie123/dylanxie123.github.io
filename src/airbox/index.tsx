@@ -8,10 +8,7 @@ function AirBoxApp() {
   const airBoxModel = new AirBoxModel();
 
   useEffect(() => {
-    airBoxModel.subscribe();
-    return () => {
-      airBoxModel.unSubscribe();
-    };
+    airBoxModel.retrieve();
   })
 
   return (
