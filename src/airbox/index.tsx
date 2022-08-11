@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import AirBoxModel, { AirBoxModelContext } from './model/box_model';
+import AirBoxModel, { AirBoxModelContext } from './model/airboxModels';
 import BoxBoard from './components/BoxBoard';
 import UpdatingIndicator from './components/UpdatingIndicator';
 import AddBoxCard from './components/AddBoxCard';

@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import ContentModel from "../model/contentModel";
-import { AirBoxModelContext } from "../model/box_model";
+import { AirBoxModelContext } from "../model/airboxModels";
 
 interface BoxCardProp {
   box: ContentModel

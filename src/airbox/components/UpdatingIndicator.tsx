@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React, { useContext } from "react";
-import { AirBoxModelContext } from "../model/box_model";
+import { AirBoxModelContext } from "../model/airboxModels";
 
 const UpdatingIndicator = observer(() => {
   const airBoxModel = useContext(AirBoxModelContext);

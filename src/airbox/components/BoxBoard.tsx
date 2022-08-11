@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { AirBoxModelContext } from '../model/box_model';
+import { AirBoxModelContext } from '../model/airboxModels';
 import { observer } from 'mobx-react-lite';
 import BoxCard from './BoxCard';
 
