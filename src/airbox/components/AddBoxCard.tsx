@@ -1,8 +1,8 @@
-import React, { useContext, useState } from "react";
-import { AirBoxModelContext } from "../model/airboxModels";
+import React, { useState } from "react";
+import { useAirBoxModel } from "../model/airboxModels";
 
 const AddBoxCard = () => {
-  const airBoxModel = useContext(AirBoxModelContext);
+  const airBoxModel = useAirBoxModel();
   const [content, update] = useState('');
   const fileInput = React.createRef<HTMLInputElement>();
 

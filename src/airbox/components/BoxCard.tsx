@@ -1,13 +1,13 @@
-import React, { useContext } from "react";
+import React from "react";
 import ContentModel from "../model/contentModel";
-import { AirBoxModelContext } from "../model/airboxModels";
+import { useAirBoxModel } from "../model/airboxModels";
 
 interface BoxCardProp {
   box: ContentModel
 }
 
 const BoxCard = (prop: BoxCardProp) => {
-  const airBoxModel = useContext(AirBoxModelContext);
+  const airBoxModel = useAirBoxModel();
 
   const getBoxDom = (box: ContentModel) => {
     switch (box.type.split('/')[0]) {

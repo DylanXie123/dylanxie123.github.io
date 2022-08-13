@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
-import { AirBoxModelContext } from '../model/airboxModels';
+import React from 'react';
+import { useAirBoxModel } from '../model/airboxModels';
 import { observer } from 'mobx-react-lite';
 import BoxCard from './BoxCard';
 
 const BoxBoard = observer(() => {
-  const airBoxModel = useContext(AirBoxModelContext);
+  const airBoxModel = useAirBoxModel();
 
   const boxes = airBoxModel.getModels.map(box => (
     <BoxCard key={box.id} box={box} />

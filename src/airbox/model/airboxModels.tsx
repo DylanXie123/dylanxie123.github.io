@@ -1,8 +1,8 @@
 import { action, computed, makeObservable, observable } from "mobx";
-import React from "react";
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import ContentModel, { createContentModel } from "./contentModel";
 import { decrypt } from "../../login/auth";
+import React, { useContext } from "react";
 
 export default class AirBoxModel {
   @observable
@@ -74,10 +74,10 @@ export default class AirBoxModel {
 
   private insertDB = async (item: ContentModel) => {
     try {
-      const { data, error } = await this.supabase
+      const { data } = await this.supabase
         .from<ContentModel>('contents')
         .insert(item);
-      if (error === null) return data.map(this.db2model);
+      if (data !== null) return data.map(this.db2model);
     } catch (_) { }
     return false;
   }
@@ -125,11 +125,11 @@ export default class AirBoxModel {
   @action
   retrieve = async () => {
     this.updatingItem = 0;
-    const { data, error } = await this.supabase
+    const { data } = await this.supabase
       .from('contents')
       .select();
     this.updatingItem = -1;
-    if (error === null) {
+    if (data !== null) {
       this.models = data.map(this.db2model);
       return true;
     } else {
@@ -138,7 +138,6 @@ export default class AirBoxModel {
   }
 
   private db2model(dbItem: any): ContentModel {
-    console.log(dbItem)
     return {
       ...dbItem,
       createdDate: Date.parse(dbItem.createdDate),
@@ -154,5 +153,13 @@ export default class AirBoxModel {
   }
 }
 
-const airBoxModel = new AirBoxModel();
-export const AirBoxModelContext = React.createContext<AirBoxModel>(airBoxModel);
+export const AirBoxModelContext = React.createContext<AirBoxModel | null>(null);
+
+export const useAirBoxModel = () => {
+  const airBoxModel = useContext(AirBoxModelContext);
+  if (airBoxModel === null) {
+    throw new Error('useAirBoxModel must be used within a AirBoxModelContext.');
+  } else {
+    return airBoxModel;
+  }
+}
