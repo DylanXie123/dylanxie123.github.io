@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import AirBoxModel, { AirBoxModelContext } from './model/airboxModels';
 import BoxBoard from './components/BoxBoard';
-import UpdatingIndicator from './components/UpdatingIndicator';
+import InitialLoadingIndicator from './components/InitialLoadingIndicator';
 import AddBoxCard from './components/AddBoxCard';
 
 function AirBoxApp() {
@@ -13,7 +13,7 @@ function AirBoxApp() {
 
   return (
     <AirBoxModelContext.Provider value={airBoxModel}>
-      <UpdatingIndicator />
+      <InitialLoadingIndicator />
       <BoxBoard />
       <AddBoxCard />
     </AirBoxModelContext.Provider>

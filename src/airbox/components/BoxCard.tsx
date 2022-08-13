@@ -1,12 +1,13 @@
 import React from "react";
 import ContentModel from "../model/contentModel";
 import { useAirBoxModel } from "../model/airboxModels";
+import { observer } from "mobx-react-lite";
 
 interface BoxCardProp {
   box: ContentModel
 }
 
-const BoxCard = (prop: BoxCardProp) => {
+const BoxCard = observer((prop: BoxCardProp) => {
   const airBoxModel = useAirBoxModel();
 
   const getBoxDom = (box: ContentModel) => {
@@ -42,10 +43,11 @@ const BoxCard = (prop: BoxCardProp) => {
       <div style={btnGroupStyle}>
         <button onClick={() => { airBoxModel.removeItem(prop.box.id) }}>Delete</button>
         <button onClick={() => { navigator.clipboard.writeText(prop.box.content) }}>Copy</button>
+        {airBoxModel.getUpdatingItemID === prop.box.id ? <span>Loading...</span> : null}
       </div>
     </div>
   );
-}
+})
 
 const UrlBox = (content: string) => {
   const urlRegexp = /https?:\/\/[-a-zA-Z0-9@:%._~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b[-a-zA-Z0-9()@:%_.~#?&//=]*/g;

@@ -9,7 +9,7 @@ export default class AirBoxModel {
   private models: ContentModel[] = [];
 
   @observable
-  private updatingItem: number = -1;
+  private updatingItemID: string | null = null;
 
   private supabase!: SupabaseClient;
 
@@ -35,9 +35,28 @@ export default class AirBoxModel {
 
   createText = async (text: string) => {
     const modelItem = createContentModel(text, 'text/plain');
-    const undoFn = this.insertModel(modelItem);
+    return this.createModel(modelItem);
+  }
+
+  createFile = async (file: File) => {
+    const tempModel = createContentModel(file.name, 'text/plain');
+    const { undoFn } = this.insertModel(tempModel);
+    const insertFileResult = await this.insertStorage(file);
+    undoFn();
+    if (insertFileResult !== false) {
+      const { path, publicURL } = insertFileResult;
+      const modelItem = createContentModel(path, file.type, publicURL)
+      return this.createModel(modelItem);
+    } else {
+      return false;
+    }
+  }
+
+  private createModel = async (modelItem: ContentModel) => {
+    const { finishFn, undoFn } = this.insertModel(modelItem);
     const dbResult = await this.insertDB(modelItem);
     if (dbResult !== false) {
+      finishFn();
       return true;
     } else {
       undoFn();
@@ -46,30 +65,24 @@ export default class AirBoxModel {
   }
 
   @action
-  createFile = (file: File) => {
-    // this.status = "loading";
-    // const savedFile = await file.save();
-
-    // return this.create({
-    //   content: savedFile.name(),
-    //   boxType: box.type,
-    //   refId: savedFile.id,
-    //   refUrl: savedFile.url(),
-    // })
-  }
-
-  @action
   private insertModel = (item: ContentModel) => {
     const insertIndex = 0;
     this.models.splice(insertIndex, 0, item);
-    this.updatingItem = insertIndex;
+    this.updatingItemID = item.id;
+
+    const finishFn = () => {
+      this.updatingItemID = null;
+    }
 
     const undoFn = () => {
       this.models.splice(insertIndex, 1);
-      this.updatingItem = -1;
+      this.updatingItemID = null;
     }
 
-    return action(undoFn);
+    return {
+      finishFn: action(finishFn),
+      undoFn: action(undoFn),
+    };
   }
 
   private insertDB = async (item: ContentModel) => {
@@ -82,13 +95,38 @@ export default class AirBoxModel {
     return false;
   }
 
-  @action
+  private insertStorage = async (file: File) => {
+    try {
+      const { data } = await this.supabase
+        .storage
+        .from('airbox-storage')
+        .upload(file.name, file);
+      if (data !== null) {
+        const { publicURL } = this.supabase
+          .storage
+          .from('airbox-storage')
+          .getPublicUrl(file.name)
+        if (publicURL !== null) return {
+          path: file.name,
+          publicURL,
+        };
+      }
+    } catch (_) { }
+    return false;
+  }
+
   removeItem = async (uuid: string) => {
     const removeIndex = this.models.findIndex(v => v.id === uuid);
     if (removeIndex > -1) {
-      const undoFn = this.removeModel(removeIndex);
+      const modelItem = this.models[removeIndex];
+      const { finishFn, undoFn } = this.removeModel(removeIndex);
       const dbResult = await this.removeDB(uuid);
-      if (dbResult === true) {
+      let storageResult = true;
+      if (modelItem.refUrl) {
+        storageResult = await this.removeStorage(modelItem.content);
+      }
+      if (dbResult === true && storageResult === true) {
+        finishFn();
         return true;
       } else {
         undoFn();
@@ -100,15 +138,22 @@ export default class AirBoxModel {
   @action
   private removeModel = (removeIndex: number) => {
     const modelItem = this.models[removeIndex];
+    this.updatingItemID = modelItem.id;
     this.models.splice(removeIndex, 1);
-    this.updatingItem = removeIndex;
+
+    const finishFn = () => {
+      this.updatingItemID = null;
+    }
 
     const undoFn = () => {
       this.models.splice(removeIndex, 0, modelItem);
-      this.updatingItem = -1;
+      this.updatingItemID = null;
     }
 
-    return action(undoFn);
+    return {
+      finishFn: action(finishFn),
+      undoFn: action(undoFn),
+    };
   }
 
   private removeDB = async (id: string) => {
@@ -122,13 +167,26 @@ export default class AirBoxModel {
     return false;
   }
 
+  private removeStorage = async (path: string) => {
+    try {
+      const { data } = await this.supabase
+        .storage
+        .from('airbox-storage')
+        .remove([path]);
+      if (data !== null) return true;
+    } catch (_) {
+    }
+    return false;
+  }
+
   @action
   retrieve = async () => {
-    this.updatingItem = 0;
+    this.updatingItemID = '0';
     const { data } = await this.supabase
       .from('contents')
-      .select();
-    this.updatingItem = -1;
+      .select()
+      .order("createdDate", { ascending: false });
+    this.updatingItemID = null;
     if (data !== null) {
       this.models = data.map(this.db2model);
       return true;
@@ -148,8 +206,8 @@ export default class AirBoxModel {
     return this.models;
   }
 
-  @computed get getUpdatingItem() {
-    return this.updatingItem;
+  @computed get getUpdatingItemID() {
+    return this.updatingItemID;
   }
 }
 
