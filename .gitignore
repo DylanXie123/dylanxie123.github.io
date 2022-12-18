@@ -24,6 +24,8 @@ yarn-error.log*
 
 .eslintcache
 
+/src/airbox/script.mjs
+
 # cipher api key
 cipher.js
 env.json
